@@ -316,7 +316,7 @@ public class HibernateEncounterDAO implements EncounterDAO {
 		if(location != null){
 			criteria.add(Restrictions.eq("location", location));
 		}
-		criteria.addOrder(Order.desc("encounterDatetime"));
+		criteria.addOrder(Order.desc("dateCreated"));
 		return criteria.list();
 	}
 }
