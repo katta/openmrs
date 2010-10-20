@@ -1416,5 +1416,27 @@ public class EncounterServiceTest extends BaseContextSensitiveTest {
 		Assert.assertEquals(1, allEncounters.size());
 		Assert.assertEquals(3, allEncounters.get(7).size());
 	}
+
+	@Test
+	@Verifies(value = "should get all the encounter with the given form and location id", method = "getEncounters(Form, Location)")
+	public void getEncounters_shouldGetAllTheEncountersForTheGivenFormAndLocation() throws Exception {
+		EncounterService encounterService = Context.getEncounterService();
+		FormService formService = Context.getFormService();
+		LocationService locService = Context.getLocationService();
+		
+		List<Encounter> encounters = encounterService.getEncounters(formService.getForm(1), locService.getLocation(1));
+		assertEquals(5, encounters.size());
+	}
 	
+	@Test
+	public void getEncounters_shouldGetAllEncountersForGivenFormAndLocationOrderedByEncounteredDateDesc() throws Exception {
+		EncounterService encounterService = Context.getEncounterService();
+		FormService formService = Context.getFormService();
+		LocationService locService = Context.getLocationService();
+		
+		List<Encounter> encounters = encounterService.getEncounters(formService.getForm(1), locService.getLocation(1));
+		for(int i=0;i<encounters.size()-1;i++){
+			assertTrue(encounters.get(i).getEncounterDatetime().after(encounters.get(i+1).getEncounterDatetime()));
+		}
+	}	
 }

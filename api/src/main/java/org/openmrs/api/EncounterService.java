@@ -594,4 +594,7 @@ public interface EncounterService extends OpenmrsService {
 	@Transactional(readOnly = true)
 	public Map<Integer, List<Encounter>> getAllEncounters(Cohort patients);
 	
+	@Transactional(readOnly = true)
+	@Authorized({ PrivilegeConstants.VIEW_ENCOUNTERS })
+	public List<Encounter> getEncounters(Form form, Location location);
 }

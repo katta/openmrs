@@ -305,4 +305,13 @@ public class HibernateEncounterDAO implements EncounterDAO {
 		criteria.addOrder(org.hibernate.criterion.Order.desc("encounterDatetime"));
 		return criteria;
 	}
+
+	@SuppressWarnings("unchecked")
+	public List<Encounter> getEncounters(Form form, Location location) {
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Encounter.class);
+		criteria.add(Restrictions.eq("form", form));
+		criteria.add(Restrictions.eq("location", location));
+		criteria.addOrder(Order.desc("encounterDatetime"));
+		return criteria.list();
+	}
 }

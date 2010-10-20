@@ -549,4 +549,9 @@ public class EncounterServiceImpl extends BaseOpenmrsService implements Encounte
 	public Map<Integer, List<Encounter>> getAllEncounters(Cohort patients) {
 		return dao.getAllEncounters(patients);
 	}
+
+	@Override
+	public List<Encounter> getEncounters(Form form, Location location) {
+		return dao.getEncounters(form, location);
+	}
 }
