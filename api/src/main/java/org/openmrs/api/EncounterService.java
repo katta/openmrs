@@ -593,8 +593,30 @@ public interface EncounterService extends OpenmrsService {
 	 */
 	@Transactional(readOnly = true)
 	public Map<Integer, List<Encounter>> getAllEncounters(Cohort patients);
-	
+
+	/**
+	 * Get all encounters for a given form and location
+	 * 
+	 * @param form
+	 * @param location
+	 * @return
+	 * 
+	 * @should get all the encounter with the given form and location id
+	 * @should get all encounters for given form and location ordered by encountered date desc
+	 */
 	@Transactional(readOnly = true)
 	@Authorized({ PrivilegeConstants.VIEW_ENCOUNTERS })
 	public List<Encounter> getEncounters(Form form, Location location);
+	
+	/**
+	 * Get the list of encounters for a given form 
+	 * 
+	 * @param form
+	 * @return
+	 * 
+	 * @should get all the encounter with the given form
+	 */	
+	@Transactional(readOnly = true)
+	@Authorized({ PrivilegeConstants.VIEW_ENCOUNTERS })
+	public List<Encounter> getEncounters(Form form);
 }

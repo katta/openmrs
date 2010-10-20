@@ -1417,9 +1417,12 @@ public class EncounterServiceTest extends BaseContextSensitiveTest {
 		Assert.assertEquals(3, allEncounters.get(7).size());
 	}
 
+	/**
+	 * @see {@link EncounterService#getEncounters(Form, Location))}
+	 */
 	@Test
 	@Verifies(value = "should get all the encounter with the given form and location id", method = "getEncounters(Form, Location)")
-	public void getEncounters_shouldGetAllTheEncountersForTheGivenFormAndLocation() throws Exception {
+	public void getEncounters_shouldGetAllTheEncountersWithTheGivenFormAndLocationId() {
 		EncounterService encounterService = Context.getEncounterService();
 		FormService formService = Context.getFormService();
 		LocationService locService = Context.getLocationService();
@@ -1428,7 +1431,11 @@ public class EncounterServiceTest extends BaseContextSensitiveTest {
 		assertEquals(5, encounters.size());
 	}
 	
-	@Test
+	/**
+	 * @see {@link EncounterService#getEncounters(Form, Location))}
+	 */
+ 	@Test
+	@Verifies(value = "should get all encounters for given form and location ordered by encountered date desc", method = "getEncounters(Form, Location)")
 	public void getEncounters_shouldGetAllEncountersForGivenFormAndLocationOrderedByEncounteredDateDesc() throws Exception {
 		EncounterService encounterService = Context.getEncounterService();
 		FormService formService = Context.getFormService();
@@ -1438,5 +1445,19 @@ public class EncounterServiceTest extends BaseContextSensitiveTest {
 		for(int i=0;i<encounters.size()-1;i++){
 			assertTrue(encounters.get(i).getEncounterDatetime().after(encounters.get(i+1).getEncounterDatetime()));
 		}
+	}
+	
+	/**
+	 * @see {@link EncounterService#getEncounters(FormS))}
+	 */
+	@Test
+	@Verifies(value = "should get all the encounter with the given form", method = "getEncounters(Form)")
+	public void getEncounters_shouldGetAllTheEncountersWithTheGivenForm()
+			throws Exception {
+		EncounterService encounterService = Context.getEncounterService();
+		FormService formService = Context.getFormService();
+		
+		List<Encounter> encounters = encounterService.getEncounters(formService.getForm(1));
+		assertEquals(6, encounters.size());
 	}	
 }

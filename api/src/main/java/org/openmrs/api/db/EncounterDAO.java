@@ -174,6 +174,8 @@ public interface EncounterDAO {
 	public Map<Integer, List<Encounter>> getAllEncounters(Cohort patients);
 
 	/**
+	 * Get the list of encounter for a given form and a location.  
+	 * If Location is null then all Encounter are retrieved irrespective of their locations
 	 * 
 	 * @param formId
 	 * @param locationId
