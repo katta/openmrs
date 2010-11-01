@@ -17,6 +17,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -141,17 +142,25 @@ public class PersonName extends BaseOpenmrsData implements java.io.Serializable,
 		
 		Class nameClass = this.getClass();
 		
+		String methodName = null;
 		// loop over all of the selected methods and compare this and other
-		for (String methodName : methods) {
+		// based on the returnValue skipped the unwanted loops 
+		for (int i = 0; i < methods.length && returnValue; i++) {
+			methodName = methods[i];				
+		
 			try {
 				Method method = nameClass.getMethod(methodName, new Class[] {});
 				
 				String thisValue = (String) method.invoke(this);
 				String otherValue = (String) method.invoke(otherName);
-				
-				if (otherValue != null && otherValue.length() > 0)
+								
+				if (otherValue != null && otherValue.length() > 0){
 					returnValue &= otherValue.equals(thisValue);
-				
+				}
+				//This validation is required if thisValue have some data
+				else if (thisValue != null && thisValue.length() > 0){
+					returnValue &= thisValue.equals(otherValue);		
+				}
 			}
 			catch (NoSuchMethodException e) {
 				log.warn("No such method for comparison " + methodName, e);
