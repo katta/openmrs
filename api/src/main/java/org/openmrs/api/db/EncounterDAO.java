@@ -181,5 +181,13 @@ public interface EncounterDAO {
 	 * @param locationId
 	 * @return List<Encounter>
 	 */
-	public List<Encounter> getEncounters(Form form, Location location);
+	public List<Encounter> getEncounters(Form form,	Location location, Integer pageSize, Integer  page);
+
+	/**
+	 * Get  Encounter Count for  a  given form and location
+	 * @param form
+	 * @param location
+	 * @return
+	 */
+	public Integer getEncounterCount(Form form, Location location);
 }

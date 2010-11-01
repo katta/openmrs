@@ -554,16 +554,15 @@ public class EncounterServiceImpl extends BaseOpenmrsService implements Encounte
 	 * @see org.openmrs.api.EncounterService#getEncounters(org.openmrs.Form, org.openmrs.Location)
 	 */
 	@Override
-	public List<Encounter> getEncounters(Form form, Location location) {
-		return dao.getEncounters(form, location);
+	public List<Encounter> getEncounters(Form form, Location location, Integer pageSize, Integer page) {
+		return dao.getEncounters(form, location, pageSize, page);
 	}
-
 	
 	/**
-	 * @see org.openmrs.api.EncounterService#getEncounters(org.openmrs.Form)
+	 * @see org.openmrs.api.EncounterService#getEncounterCount(Form, Location)
 	 */
 	@Override
-	public List<Encounter> getEncounters(Form form) {
-		return getEncounters(form, null);	
+	public Integer getEncounterCount(Form form, Location location){
+		return dao.getEncounterCount(form, location);
 	}
 }

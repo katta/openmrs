@@ -28,6 +28,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.Cohort;
 import org.openmrs.Encounter;
@@ -310,13 +311,30 @@ public class HibernateEncounterDAO implements EncounterDAO {
 	 * @see org.openmrs.api.db.EncounterDAO#getEncounters(org.openmrs.Form, org.openmrs.Location)
 	 */
 	@SuppressWarnings("unchecked")
-	public List<Encounter> getEncounters(Form form, Location location) {
-		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Encounter.class);
+	public List<Encounter> getEncounters(Form form,	Location location, Integer pageSize, Integer page) {
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(
+				Encounter.class);
 		criteria.add(Restrictions.eq("form", form));
-		if(location != null){
-			criteria.add(Restrictions.eq("location", location));
-		}
-		criteria.addOrder(Order.desc("dateCreated"));
+		criteria.add(Restrictions.eq("location", location));
+		criteria.addOrder(Order.asc("encounterDatetime"));
+		criteria.addOrder(Order.asc("dateCreated"));
+		criteria.setFirstResult((page - 1) * pageSize);
+		criteria.setMaxResults(pageSize);
 		return criteria.list();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.openmrs.api.db.EncounterDAO#getEncounterCount(org.openmrs.Form, org.openmrs.Location)
+	 */
+	@Override
+	public Integer getEncounterCount(Form form, Location location) {
+		
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(
+				Encounter.class);
+		criteria.add(Restrictions.eq("form", form));
+		criteria.add(Restrictions.eq("location", location));
+		criteria.setProjection(Projections.rowCount());
+		return (Integer)criteria.list().get(0);
 	}
 }
