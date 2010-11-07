@@ -125,12 +125,14 @@ public class PersonName extends BaseOpenmrsData implements java.io.Serializable,
 	/**
 	 * Compares this PersonName object to the given otherName. This method differs from
 	 * {@link #equals(Object)} in that this method compares the inner fields of each name for
-	 * equality. Note: Null/empty fields on <code>otherName</code> /will not/ cause a false value to
-	 * be returned
+	 * equality.
 	 * 
 	 * @param otherName PersonName with which to compare
 	 * @return boolean true/false whether or not they are the same names
 	 * @should return true if given middle and family name are equal
+	 * @should return false if given name is not equal
+	 * @should return false if middle name is not equal
+	 * @should return false if family name is not equal
 	 */
 	@SuppressWarnings("unchecked")
 	public boolean equalsContent(PersonName otherName) {
@@ -141,14 +143,12 @@ public class PersonName extends BaseOpenmrsData implements java.io.Serializable,
 		
 		Class nameClass = this.getClass();
 		
-		String methodName = null;
 		// loop over all of the selected methods and compare this and other
 		// based on the returnValue skipped the unwanted loops 
 		for (int i = 0; i < methods.length && returnValue; i++) {
-			methodName = methods[i];				
 		
 			try {
-				Method method = nameClass.getMethod(methodName, new Class[] {});
+				Method method = nameClass.getMethod(methods[i], new Class[] {});
 				
 				String thisValue = (String) method.invoke(this);
 				String otherValue = (String) method.invoke(otherName);
@@ -162,7 +162,7 @@ public class PersonName extends BaseOpenmrsData implements java.io.Serializable,
 				}
 			}
 			catch (NoSuchMethodException e) {
-				log.warn("No such method for comparison " + methodName, e);
+				log.warn("No such method for comparison " + methods[i], e);
 			}
 			catch (IllegalAccessException e) {
 				log.error("Error while comparing names", e);

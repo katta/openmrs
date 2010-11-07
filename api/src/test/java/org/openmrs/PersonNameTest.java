@@ -328,6 +328,57 @@ public class PersonNameTest {
 	}
 	
 	/**
+	 * @see {@link PersonName#equalsContent(PersonName)}
+	 */
+	@Test
+	@Verifies(value = "should return false if given name is not equal", method = "equalsContent(PersonName)")
+	public void equalsContent_shouldReturnFalseIfGivenNameIsNotEqual() throws Exception {
+		PersonName pn = new PersonName(1); // a different person name id than below
+		pn.setMiddleName("Alex");
+		pn.setFamilyName("Jones");
+		PersonName other = new PersonName(2); // a different person name id than above
+		other.setGivenName("Adam");
+		other.setMiddleName("Alex");
+		other.setFamilyName("Jones");
+		
+		Assert.assertFalse(pn.equalsContent(other));
+	}
+	
+	/**
+	 * @see {@link PersonName#equalsContent(PersonName)}
+	 */
+	@Test
+	@Verifies(value = "should return false if middle name is not equal", method = "equalsContent(PersonName)")
+	public void equalsContent_shouldReturnFalseIfMiddleNameIsNotEqual() throws Exception {
+		PersonName pn = new PersonName(1); // a different person name id than below
+		pn.setGivenName("Adam");		
+		pn.setFamilyName("Jones");
+		PersonName other = new PersonName(2); // a different person name id than above
+		other.setGivenName("Adam");
+		other.setMiddleName("Alex");
+		other.setFamilyName("Jones");
+		
+		Assert.assertFalse(pn.equalsContent(other));
+	}
+	
+	/**
+	 * @see {@link PersonName#equalsContent(PersonName)}
+	 */
+	@Test
+	@Verifies(value = "should return false if family name is not equal", method = "equalsContent(PersonName)")
+	public void equalsContent_shouldReturnFalseIfFamilyNameIsNotEqual() throws Exception {
+		PersonName pn = new PersonName(1); // a different person name id than below
+		pn.setGivenName("Adam");		
+		pn.setMiddleName("Alex");
+		PersonName other = new PersonName(2); // a different person name id than above
+		other.setGivenName("Adam");
+		other.setMiddleName("Alex");
+		other.setFamilyName("Jones");
+		
+		Assert.assertFalse(pn.equalsContent(other));
+	}
+	
+	/**
 	 * @see {@link PersonName#getFamilyName()}
 	 */
 	@Test
