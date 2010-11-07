@@ -448,15 +448,24 @@ public interface PatientSetService {
 	public Map<Integer, Map<String, Object>> getCharacteristics(Cohort patients);
 	
 	/**
-	 * Gets a map of patient identifiers by identifier type, indexed by patient primary key.
+	 * The PatientIdentifer object in the returned map now ONLY contains the identifier string, no 
+	 * other data is available
+	 * 
+	 * @deprecated use method by same name that returns just the string instead of the whole object
+	 */
+	@Deprecated
+	@Transactional(readOnly = true)
+	public Map<Integer, PatientIdentifier> getPatientIdentifiersByType(Cohort patients, PatientIdentifierType type);
+	
+	/**
+	 * Gets a map of patient identifiers values by identifier type, indexed by patient primary key.
 	 * 
 	 * @param patients Cohort of patients to look up
 	 * @param type PatientIdentifierType to retrieve
-	 * @return Map of patient identifiers and PatientIdentifierTypes, for all patients in the
-	 *         specified cohort
+	 * @return Map of patient identifiers (strings) for all patients in the specified cohort
 	 */
 	@Transactional(readOnly = true)
-	public Map<Integer, PatientIdentifier> getPatientIdentifiersByType(Cohort patients, PatientIdentifierType type);
+	public Map<Integer, String> getPatientIdentifierStringsByType(Cohort patients, PatientIdentifierType type);
 	
 	/**
 	 * TODO write something here
@@ -482,6 +491,15 @@ public interface PatientSetService {
 	@Transactional(readOnly = true)
 	public Map<Integer, PatientProgram> getCurrentPatientPrograms(Cohort ps, Program program);
 	
+	/**
+	 * Gets program enrollment data for the given cohort in the given program.
+	 * The behavior is not specified if a patient is enrolled in the same program twice simultaneously.
+	 * @param ps the cohort to get data for
+	 * @param program the program to look for enrollments in
+	 * @return a Map from patientId to PatientProgram
+	 * 
+	 * @should get program enrollments for the given cohort
+	 */
 	@Transactional(readOnly = true)
 	public Map<Integer, PatientProgram> getPatientPrograms(Cohort ps, Program program);
 	
@@ -553,6 +571,7 @@ public interface PatientSetService {
 	 * (The current implementation has *not* been optimized.)
 	 * @param cached
 	 * @return
+	 * @since 1.8
 	 */
 	public Cohort getInverseOfCohort(Cohort cohort);
 	

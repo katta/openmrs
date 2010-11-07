@@ -13,7 +13,10 @@
 <%@page import="org.openmrs.util.OpenmrsUtil"%>
 <%@page import="org.openmrs.api.context.Context"%>
 <%@page import="org.openmrs.module.ModuleFactory"%>
-<%@page import="org.openmrs.module.Module"%><br />
+<%@page import="org.openmrs.module.Module"%>
+<%@page import="org.openmrs.ImplementationId" %>
+
+<br />
 
 <h2>An Internal Error has Occurred</h2>
 
@@ -114,19 +117,32 @@ try {
             pageContext.setAttribute("stackTrace", OpenmrsUtil.shortenedStackTrace(description.toString()));
             pageContext.setAttribute("errorMessage", exception.toString());
             pageContext.setAttribute("openmrs_version", OpenmrsConstants.OPENMRS_VERSION);
-            pageContext.setAttribute("server_info", session.getServletContext().getServerInfo());            
-            pageContext.setAttribute("username", Context.getAuthenticatedUser().getUsername());
-            String implementationId = Context.getAdministrationService().getGlobalProperty(OpenmrsConstants.GLOBAL_PROPERTY_IMPLEMENTATION_ID);
+            pageContext.setAttribute("server_info", session.getServletContext().getServerInfo());
+            String username = Context.getAuthenticatedUser().getUsername();
+            if (username == null || username.length() == 0)
+            	username = Context.getAuthenticatedUser().getSystemId();
+            pageContext.setAttribute("username", username);
+            ImplementationId id = Context.getAdministrationService().getImplementationId();
+            String implementationId = ""; 
+            if (id != null) {
+            	implementationId = id.getImplementationId();
+            	implementationId += " = " + id.getName();
+            }
             pageContext.setAttribute("implementationId", (implementationId != null) ? implementationId : "");
             StringBuilder sb = new StringBuilder();
             boolean isFirst = true;
             for(Module module : ModuleFactory.getStartedModules()){
             	if(isFirst){
-            		sb.append(module.getModuleId());
+            		sb.append(module.getModuleId())
+            		  .append(" v")
+            		  .append(module.getVersion());
             		isFirst = false;
             	}
             	else
-            		sb.append(", "+module.getModuleId());
+            		sb.append(", ")
+            		  .append(module.getModuleId())
+            		  .append(" v")
+            		  .append(module.getVersion());
             }
             pageContext.setAttribute("startedModules", sb.toString());            
 		}

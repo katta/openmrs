@@ -45,8 +45,7 @@ public class ModuleResourcesServlet extends HttpServlet {
 	@Override
 	protected long getLastModified(HttpServletRequest req) {
 		File f = getFile(req);
-		f.lastModified();
-		
+
 		if (f == null)
 			return super.getLastModified(req);
 		
@@ -59,20 +58,14 @@ public class ModuleResourcesServlet extends HttpServlet {
 		log.debug("In service method for module servlet: " + request.getPathInfo());
 		
 		File f = getFile(request);
-		if (f == null)
+		if (f == null) {
 			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-		
-		// temporary test!
-		try {
-			Thread.sleep(10);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			return;
 		}
 		
 		response.setDateHeader("Last-Modified", f.lastModified());
 		response.setContentLength(new Long(f.length()).intValue());
-		
+
 		FileInputStream is = new FileInputStream(f);
 		try {
 			OpenmrsUtil.copyFile(is, response.getOutputStream());
@@ -80,7 +73,6 @@ public class ModuleResourcesServlet extends HttpServlet {
 		finally {
 			OpenmrsUtil.closeStream(is);
 		}
-		
 	}
 	
 	/**
@@ -102,11 +94,9 @@ public class ModuleResourcesServlet extends HttpServlet {
 		String realPath = getServletContext().getRealPath("") + MODULE_PATH + module.getModuleIdAsPath() + "/resources" + relativePath;
 		realPath = realPath.replace("/", File.separator);
 		
-		log.debug("Real path: " + realPath);
-		
 		File f = new File(realPath);
 		if (!f.exists()) {
-			log.warn("No object with path '" + realPath + "' exists for module '" + module.getModuleId() + "'");
+			log.warn("No file with path '" + realPath + "' exists for module '" + module.getModuleId() + "'");
 			return null;
 		}
 		

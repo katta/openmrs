@@ -26,9 +26,11 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 import junit.framework.Assert;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.openmrs.Concept;
@@ -58,6 +60,7 @@ import org.openmrs.api.context.Context;
 import org.openmrs.test.BaseContextSensitiveTest;
 import org.openmrs.test.SkipBaseSetup;
 import org.openmrs.test.Verifies;
+import org.openmrs.util.LocaleUtility;
 import org.openmrs.util.OpenmrsConstants;
 
 /**
@@ -114,8 +117,8 @@ public class ConceptServiceTest extends BaseContextSensitiveTest {
 		String partialNameToFetch = "So";
 		
 		List<Concept> firstConceptsByPartialNameList = conceptService.getConceptsByName(partialNameToFetch);
-		assertTrue("You should be able to get the concept by partial name", firstConceptsByPartialNameList
-		        .contains(new Concept(1)));
+		assertTrue("You should be able to get the concept by partial name",
+		    firstConceptsByPartialNameList.contains(new Concept(1)));
 	}
 	
 	/**
@@ -408,7 +411,7 @@ public class ConceptServiceTest extends BaseContextSensitiveTest {
 		
 		conceptNumeric.getDescriptions().size();
 		concept.getDescriptions().size();
-	}	
+	}
 	
 	/**
 	 * This test had to be added to ConceptServiceTest because ConceptTest does not currently
@@ -959,8 +962,8 @@ public class ConceptServiceTest extends BaseContextSensitiveTest {
 		source.setName(sourceName);
 		source.setHl7Code(aNullString);
 		conceptService.saveConceptSource(source);
-		assertEquals("Did not save a ConceptSource with a null hl7Code", source, conceptService
-		        .getConceptSourceByName(sourceName));
+		assertEquals("Did not save a ConceptSource with a null hl7Code", source,
+		    conceptService.getConceptSourceByName(sourceName));
 		
 	}
 	
@@ -1305,18 +1308,113 @@ public class ConceptServiceTest extends BaseContextSensitiveTest {
 		Assert.assertEquals(true, conceptSet.contains(conceptService.getConcept(5)));
 		Assert.assertEquals(true, conceptSet.contains(conceptService.getConcept(6)));
 	}
-
+	
 	/**
-	 * @see {@link ConceptService#getConcepts(String,List<Locale>,null,List<ConceptClass>,List<ConceptClass>,List<ConceptDatatype>,List<ConceptDatatype>,Concept,Integer,Integer)}
-	 * 
+	 * @see {@link 
+	 *      ConceptService#getConcepts(String,List<Locale>,null,List<ConceptClass>,List<ConceptClass
+	 *      >,List<ConceptDatatype>,List<ConceptDatatype>,Concept,Integer,Integer)}
 	 */
 	@Test
 	@Verifies(value = "should return the best matched name as the first item in the searchResultsList", method = "getConcepts(String,List<Locale>,null,List<ConceptClass>,List<ConceptClass>,List<ConceptDatatype>,List<ConceptDatatype>,Concept,Integer,Integer)")
-	public void getConcepts_shouldReturnTheBestMatchedNameAsTheFirstItemInTheSearchResultsList()
-			throws Exception {
-		executeDataSet("org/openmrs/api/include/ConceptServiceTest-words.xml");		
+	public void getConcepts_shouldReturnTheBestMatchedNameAsTheFirstItemInTheSearchResultsList() throws Exception {
+		executeDataSet("org/openmrs/api/include/ConceptServiceTest-words.xml");
 		List<ConceptSearchResult> searchResults = Context.getConceptService().getConcepts("cd4",
-			    Collections.singletonList(Locale.ENGLISH), false, null, null, null, null, null, null, null);
+		    Collections.singletonList(Locale.ENGLISH), false, null, null, null, null, null, null, null);
 		Assert.assertEquals(1847, searchResults.get(0).getConceptName().getConceptNameId().intValue());
+	}
+	
+	/**
+	 * This test fetches all concepts in the xml test dataset and ensures that every locale for a
+	 * concept name is among those listed in the global property 'locale.allowed.list' and default
+	 * locale. NOTE that it doesn't test a particular API method directly.
+	 */
+	@Test
+	@Verifies(value = "should not accept a locale that is neither among the localeAllowedList nor a default locale", method = "")
+	public void shouldNotAcceptALocaleThatIsNeitherAmongTheLocaleAllowedListNorADefaultLocale() throws Exception {
+		List<Concept> concepts = Context.getConceptService().getAllConcepts();
+		Set<Locale> allowedLocales = LocaleUtility.getLocalesInOrder();
+		for (Concept concept : concepts) {
+			if (!CollectionUtils.isEmpty(concept.getNames())) {
+				for (ConceptName cn : concept.getNames()) {
+					Assert.assertTrue("The locale '" + cn.getLocale() + "' of conceptName with id: " + cn.getConceptNameId()
+					        + " is not among those listed in the global property 'locale.allowed.list'",
+					    allowedLocales.contains(cn.getLocale()));
+				}
+			}
+		}
+	}
+	
+	/**
+	 * This test fetches all concepts in the xml test dataset and ensures that every locale that has
+	 * atleast one conceptName has a name marked as preferred. NOTE that it doesn't test a
+	 * particular API method directly.
+	 */
+	@Test
+	@Verifies(value = "should always return a preferred name for every locale that has atleast one unvoided name", method = "")
+	public void shouldAlwaysReturnAPreferredNameForEveryLocaleThatHasAtleastOneUnvoidedName() throws Exception {
+		List<Concept> concepts = Context.getConceptService().getAllConcepts();
+		Set<Locale> allowedLocales = LocaleUtility.getLocalesInOrder();
+		for (Concept concept : concepts) {
+			for (Locale locale : allowedLocales) {
+				if (!CollectionUtils.isEmpty(concept.getNames(locale))) {
+					Assert.assertNotNull("Concept with Id: " + concept.getConceptId() + " has no preferred name in locale:"
+					        + locale, concept.getPreferredName(locale));
+					Assert.assertEquals(true, concept.getPreferredName(locale).isLocalePreferred().booleanValue());
+				}
+			}
+		}
+	}
+	
+	/**
+	 * This test is run against the xml test dataset for all concepts to ensure that in every locale
+	 * with one or more names, there isn't more than one name explicitly marked as locale preferred.
+	 * NOTE that it doesn't test a particular API method directly
+	 */
+	@Test
+	@Verifies(value = "should ensure that every concepName locale has exactly one preferred name", method = "")
+	public void shouldEnsureThatEveryConcepNameLocaleHasExactlyOnePreferredName() throws Exception {
+		List<Concept> concepts = Context.getConceptService().getAllConcepts();
+		Set<Locale> allowedLocales = LocaleUtility.getLocalesInOrder();
+		for (Concept concept : concepts) {
+			for (Locale locale : allowedLocales) {
+				Collection<ConceptName> namesInLocale = concept.getNames(locale);
+				if (!CollectionUtils.isEmpty(namesInLocale)) {
+					int preferredNamesFound = 0;
+					for (ConceptName conceptName : namesInLocale) {
+						if (conceptName.isLocalePreferred()) {
+							preferredNamesFound++;
+							Assert.assertTrue("Found multiple preferred names for conceptId: " + concept.getConceptId()
+							        + " in the locale '" + locale + "'", preferredNamesFound < 2);
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	/**
+	 * @see {@link ConceptService#saveConcept(Concept)}
+	 */
+	@Test
+	@Verifies(value = "should set a preferred name for each locale if none is marked", method = "saveConcept(Concept)")
+	public void saveConcept_shouldSetAPreferredNameForEachLocaleIfNoneIsMarked() throws Exception {
+		//add some other locales to locale.allowed.list for testing purposes
+		GlobalProperty gp = Context.getAdministrationService().getGlobalPropertyObject(
+		    OpenmrsConstants.GLOBAL_PROPERTY_LOCALE_ALLOWED_LIST);
+		gp.setPropertyValue(gp.getPropertyValue().concat(",fr,ja"));
+		Context.getAdministrationService().saveGlobalProperty(gp);
+		
+		Concept concept = new Concept();
+		concept.addName(new ConceptName("name1", Locale.ENGLISH));
+		concept.addName(new ConceptName("name2", Locale.ENGLISH));
+		concept.addName(new ConceptName("name3", Locale.FRENCH));
+		concept.addName(new ConceptName("name4", Locale.FRENCH));
+		concept.addName(new ConceptName("name5", Locale.JAPANESE));
+		concept.addName(new ConceptName("name6", Locale.JAPANESE));
+		
+		concept = Context.getConceptService().saveConcept(concept);
+		Assert.assertNotNull(concept.getPreferredName(Locale.ENGLISH));
+		Assert.assertNotNull(concept.getPreferredName(Locale.FRENCH));
+		Assert.assertNotNull(concept.getPreferredName(Locale.JAPANESE));
 	}
 }
