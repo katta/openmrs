@@ -620,32 +620,4 @@ public interface EncounterService extends OpenmrsService {
 	 * @since 1.8
 	 */
 	public Integer getCountOfEncounters(String query, boolean includeVoided);
-	
-	/**
-	 * Get all encounters for a given form and location
-	 * 
-	 * @param form
-	 * @param location
-	 * @param pageSize
-	 * @param page
-	 * @return
-	 * 
-	 * @should get all the encounter with the given form and location id based on the pagesize and page
-	 * @should get all the encounter with the given form and location id for the given page and pagesize with encounterDatetime & date created in Ascending order
-	 */
-	
-	@Transactional(readOnly = true)
-	@Authorized({ PrivilegeConstants.VIEW_ENCOUNTERS })
-	public List<Encounter> getEncounters(Form form, Location location, Integer pageSize, Integer page);
-	
-	/**
-	 *  Get the  total encounter count for a given form and location
-	 * @param form
-	 * @param location
-	 * @return
-	 * @should get the total  encounter count with the given form and location id 
-	 */
-	@Transactional(readOnly = true)
-	@Authorized({ PrivilegeConstants.VIEW_ENCOUNTERS })
-	public Integer getEncounterCount(Form form, Location location);
 }

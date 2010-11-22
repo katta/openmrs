@@ -187,21 +187,4 @@ public interface EncounterDAO {
 	 */
 
 	public Integer getCountOfEncounters(String query, boolean includeVoided);
-	/**
-	 * Get the list of encounter for a given form and a location.  
-	 * If Location is null then all Encounter are retrieved irrespective of their locations
-	 * 
-	 * @param formId
-	 * @param locationId
-	 * @return List<Encounter>
-	 */
-	public List<Encounter> getEncounters(Form form,	Location location, Integer pageSize, Integer  page);
-
-	/**
-	 * Get  Encounter Count for  a  given form and location
-	 * @param form
-	 * @param location
-	 * @return
-	 */
-	public Integer getEncounterCount(Form form, Location location);
 }

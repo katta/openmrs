@@ -337,35 +337,4 @@ public class HibernateEncounterDAO implements EncounterDAO {
 		    new ArrayList<PatientIdentifierType>(), false);
 		return criteria;
 	}
-
-	/**
-	 * @see org.openmrs.api.db.EncounterDAO#getEncounters(org.openmrs.Form, org.openmrs.Location)
-	 */
-	@SuppressWarnings("unchecked")
-	public List<Encounter> getEncounters(Form form,	Location location, Integer pageSize, Integer page) {
-		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(
-				Encounter.class);
-		criteria.add(Restrictions.eq("form", form));
-		criteria.add(Restrictions.eq("location", location));
-		criteria.addOrder(Order.asc("encounterDatetime"));
-		criteria.addOrder(Order.asc("dateCreated"));
-		criteria.setFirstResult((page - 1) * pageSize);
-		criteria.setMaxResults(pageSize);
-		return criteria.list();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.openmrs.api.db.EncounterDAO#getEncounterCount(org.openmrs.Form, org.openmrs.Location)
-	 */
-	@Override
-	public Integer getEncounterCount(Form form, Location location) {
-		
-		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(
-				Encounter.class);
-		criteria.add(Restrictions.eq("form", form));
-		criteria.add(Restrictions.eq("location", location));
-		criteria.setProjection(Projections.rowCount());
-		return (Integer)criteria.list().get(0);
-	}
 }
