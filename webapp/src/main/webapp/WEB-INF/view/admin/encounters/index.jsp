@@ -8,22 +8,30 @@
 <openmrs:htmlInclude file="/dwr/interface/DWREncounterService.js"/>
 <openmrs:htmlInclude file="/scripts/jquery/dataTables/css/dataTables_jui.css"/>
 <openmrs:htmlInclude file="/scripts/jquery/dataTables/js/jquery.dataTables.min.js"/>
-<openmrs:htmlInclude file="/scripts/jquery-ui/js/encounterSearch.js" />
+<openmrs:htmlInclude file="/scripts/jquery-ui/js/openmrsSearch.js" />
 
 <script type="text/javascript">
 	var lastSearch;
 	$j(document).ready(function() {
-		new EncounterSearch("findEncounter", true, doSelectionHandler, {searchLabel: '<spring:message code="Encounter.search"/>'});
+		new OpenmrsSearch("findEncounter", true, doEncounterSearch, doSelectionHandler, 
+				[	{fieldName:"personName", header:omsgs.patientName},
+					{fieldName:"encounterType", header:omsgs.encounterType},
+					{fieldName:"formName", header:omsgs.encounterForm},
+					{fieldName:"providerName", header:omsgs.encounterProvider},
+					{fieldName:"location", header:omsgs.encounterLocation},
+					{fieldName:"encounterDateString", header:omsgs.encounterDate}
+				],
+				{searchLabel: '<spring:message code="Encounter.search" javaScriptEscape="true"/>'});
 	});
 	
 	function doSelectionHandler(index, data) {
 		document.location = "encounter.form?encounterId=" + data.encounterId + "&phrase=" + lastSearch;
 	}
 	
-	//this method over rides the default searchHandler for the encounterSearch widget
-	function doEncounterSearch(text, resultHandler, opts) {
+	//searchHandler for the Search widget
+	function doEncounterSearch(text, resultHandler, getMatchCount, opts) {
 		lastSearch = text;
-		DWREncounterService.findCountAndEncounters(text, opts.includeVoided, opts.start, opts.length, resultHandler);
+		DWREncounterService.findCountAndEncounters(text, opts.includeVoided, opts.start, opts.length, getMatchCount, resultHandler);
 	}
 </script>
 
@@ -37,7 +45,7 @@
 
 <div>
 	<b class="boxHeader"><spring:message code="Encounter.find"/></b>
-	<div class="box" style="overflow: auto;">
+	<div class="searchWidgetContainer">
 		<div id="findEncounter" <request:existsParameter name="autoJump">allowAutoJump='true'</request:existsParameter> ></div>
 	</div>
 </div>
