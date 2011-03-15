@@ -64,29 +64,18 @@
                 <artifactId>maven-jetty-plugin</artifactId>
                 <version>6.1.10</version>
 
-                <configuration>
-                    <webAppSourceDirectory>${project.parent.basedir}/webapp/src/main/webapp
-                    </webAppSourceDirectory>
-                    <webApp>${project.parent.basedir}/webapp/target/openmrs.war</webApp>
-
-                    <webXml>${project.parent.basedir}/webapp/src/main/webapp/WEB-INF/web.xml</webXml>
-
-                    <classesDirectory>${project.parent.basedir}/webapp/target/classes</classesDirectory>
-                    <webAppConfig>
-                        <contextPath>/${webapp.name}</contextPath>
-                        <extraClasspath>
-                            ../webapp/target/classes;target/classes;../api/target/classes;../web/target/classes;
-                        </extraClasspath>
-
-                    </webAppConfig>
-                    <systemProperties>
-                        <systemProperty>
-                            <name>in_Memory</name>
-                            <value>true</value>
-                        </systemProperty>
-                    </systemProperties>
-
-                </configuration>
+				<configuration>
+					<webAppSourceDirectory>${project.parent.basedir}/webapp/src/main/webapp
+			                    </webAppSourceDirectory>
+					<webApp>${project.parent.basedir}/webapp/target/openmrs.war</webApp>
+					<systemProperties>
+						<systemProperty>
+							<name>in_Memory</name>
+							<value>true</value>
+						</systemProperty>
+					</systemProperties>
+			
+				</configuration>
 
                 <executions>
                     <execution>
