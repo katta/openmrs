@@ -20,7 +20,7 @@ Then take me to step 3 of the installation page with the heading Step 3 of 5
 
 Given I am on step 3 of the installation page with the heading Step 3 of 5
 When I click on Continue button on step 3
-Then take me to installation step 4 with heading Step 4 of 5
+Then take me to step 4 of the installation page with the heading Step 4 of 5
 
 Given I am on step 4 of the installation page with the heading Step 4 of 5
 When I type Admin123 as openmrs password in step 4

@@ -69,12 +69,7 @@ public abstract class Steps {
 	protected void type(String text, Finder<WebElement, WebDriver> inputFinder) {
 		context.type(text, inputFinder);
 	}
-
-    protected void clear(String xpath) {
-		   driver.findElement(By.xpath(xpath)).clear();
-
-	}
-
+	
 	/**
 	 * Syntactic sugar to use with {@link HamcrestWebDriverTestCase#type(String,
 	 * Finder<WebElement, WebDriver>)}, e.g. type("cheese", into(textbox()));
@@ -136,7 +131,7 @@ public abstract class Steps {
 
 	public Steps(WebDriver driver) {
 		this.driver = driver;
-		this.context = new WebDriverTestContext(driver);
+		this.context = new CustomWebDriverContext(driver);
 	}
 
 
