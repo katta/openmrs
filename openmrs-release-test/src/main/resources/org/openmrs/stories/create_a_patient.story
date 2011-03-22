@@ -8,7 +8,7 @@ Given I am on the Find/Create Patient Page
 When I enter John as Name
 And I enter 32 as Age
 And I select Male as Gender
-And I click on the Create Person button
+And Create person
 Then take me to Found Similar People Page
 
 Given I am on the Found Similar People Page

@@ -133,8 +133,5 @@ public abstract class Steps {
 		this.driver = driver;
 		this.context = new CustomWebDriverContext(driver);
 	}
-
-
-
 	
 }
