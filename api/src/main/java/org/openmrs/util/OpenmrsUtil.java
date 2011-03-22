@@ -2300,8 +2300,8 @@ public class OpenmrsUtil {
 		}
 		
 		String filename = applicationName + "-runtime.properties";
-		if ("true".equalsIgnoreCase(System.getProperty("in_Memory")))
-			filename = applicationName + "-test-runtime.properties";
+		if ("true".equalsIgnoreCase(System.getProperty("testConfiguration")))
+			filename = applicationName + " ";
 		// next look in the OpenMRS application data directory
 		if (propertyStream == null) {
 			filepath = OpenmrsUtil.getApplicationDataDirectory() + filename;

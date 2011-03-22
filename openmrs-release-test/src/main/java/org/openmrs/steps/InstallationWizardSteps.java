@@ -1,20 +1,17 @@
 package org.openmrs.steps;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.equalTo;
-import static org.openqa.selenium.lift.Finders.button;
-import static org.openqa.selenium.lift.Finders.div;
-import static org.openqa.selenium.lift.Finders.radioButton;
-import static org.openqa.selenium.lift.Finders.textbox;
-import static org.openqa.selenium.lift.Matchers.attribute;
-import static org.openqa.selenium.lift.Matchers.text;
-
 import org.jbehave.core.annotations.Alias;
 import org.jbehave.core.annotations.Given;
 import org.jbehave.core.annotations.Then;
 import org.jbehave.core.annotations.When;
 import org.openmrs.Steps;
 import org.openqa.selenium.WebDriver;
+
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
+import static org.openqa.selenium.lift.Finders.*;
+import static org.openqa.selenium.lift.Matchers.attribute;
+import static org.openqa.selenium.lift.Matchers.text;
 
 public class InstallationWizardSteps extends Steps {
 	public InstallationWizardSteps(WebDriver driver) {
@@ -73,6 +70,8 @@ public class InstallationWizardSteps extends Steps {
 
 	@When("I mention $user as user name and $password as password for the user with CREATE USER privileges")
 	public void enterUserName(String user, String password) {
+        clickOn(radioButton().with(
+                attribute("name", equalTo("add_demo_data"))).with(attribute("value",equalTo("yes"))));
 		type(user,
 				into(textbox().with(
 						attribute("name", equalTo("current_database_username")))));
