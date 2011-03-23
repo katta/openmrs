@@ -5,6 +5,7 @@ import org.jbehave.core.annotations.Then;
 import org.jbehave.core.annotations.When;
 import org.openmrs.Steps;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.lift.find.HtmlTagFinder;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.openqa.selenium.lift.Finders.*;
@@ -25,8 +26,9 @@ public class CreateObservationSteps extends Steps {
     public void clickManageObsLink() {
         clickOn(link().with(text(equalTo("Manage Observation"))));
     }
+
     @Then("take me to Observation Management Page with Observation Management as heading")
-    public void verifyManagementPage(){
+    public void verifyManagementPage() {
         assertPresenceOf(finderByXpath("/html/body/div[@id=\'pageBody\']/div[@id=\'content\']/h2").with(text(equalTo("Observation Management"))));
     }
 
@@ -60,8 +62,9 @@ public class CreateObservationSteps extends Steps {
     @When("I type $name as person")
     public void enterPersonName(String name) {
         type(name, into(textbox().with(attribute("id", equalTo("person_id_selection")))));
-        waitFor(finderByXpath("/html/body/ul[1]/li[2]/a/span/span[2]"));
-        clickOn(finderByXpath("/html/body/ul[1]/li[2]/a/span/span[2]"));
+        HtmlTagFinder finder = link().with(attribute("class", equalTo("ui-corner-all")));
+        waitFor(finder);
+        clickOn(finder);
 
     }
 
