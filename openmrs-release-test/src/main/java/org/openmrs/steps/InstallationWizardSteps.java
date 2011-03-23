@@ -52,7 +52,7 @@ public class InstallationWizardSteps extends Steps {
 		type("jdbc:mysql:mxj://localhost:3316/openmrs_memory?"
 				+ "autoReconnect=true&sessionVariables=storage_engine=InnoDB"
 				+ "&useUnicode=true&characterEncoding=UTF-8&server.initialize-user=true"
-				+ "&createDatabaseIfNotExist=true&server.basedir=database&server.datadir=database/data"
+				+ "&createDatabaseIfNotExist=true&server.basedir=target/database&server.datadir=target/database/data"
 				+ "&server.collation-server=utf8_general_ci&server.character-set-server=utf8",
 				into(textbox().with(
 						attribute("name", equalTo("database_connection")))));
@@ -71,7 +71,7 @@ public class InstallationWizardSteps extends Steps {
 	@When("I mention $user as user name and $password as password for the user with CREATE USER privileges")
 	public void enterUserName(String user, String password) {
         clickOn(radioButton().with(
-                attribute("name", equalTo("add_demo_data"))).with(attribute("value",equalTo("yes"))));
+           attribute("name", equalTo("add_demo_data"))).with(attribute("value",equalTo("yes"))));
 		type(user,
 				into(textbox().with(
 						attribute("name", equalTo("current_database_username")))));
@@ -96,10 +96,10 @@ public class InstallationWizardSteps extends Steps {
 								equalTo("new_admin_password_confirm")))));
 	}
 
-	@Then("take me to $button Page")
-	public void verifyLoginPage(String button) {
-		waitFor(button().with(attribute("value", equalTo(button))), 1800000);
-		assertPresenceOf(div().with(
-				text(containsString("OpenMRS Installation Wizard"))));
+	@Then("take me to login Page")
+	public void verifyLoginPage() {
+		waitFor(button().with(attribute("value", equalTo("Log In"))), 1800000);
+		assertPresenceOf(title().with(
+				text(containsString("OpenMRS - Home"))));
 	}
 }

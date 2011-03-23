@@ -90,7 +90,7 @@
                                 <phase>integration-test</phase>
                                 <configuration>
                                     <includes>
-                                        <include>**/stories/*.java</include>
+                                        <include>**/stories/InstallationWizard.java</include>
                                     </includes>
                                 </configuration>
                                 <goals>
@@ -112,7 +112,7 @@
 					<webApp>${project.parent.basedir}/webapp/target/openmrs.war</webApp>
 					<systemProperties>
 						<systemProperty>
-							<name>in_Memory</name>
+							<name>testConfiguration</name>
 							<value>true</value>
 						</systemProperty>
 					</systemProperties>

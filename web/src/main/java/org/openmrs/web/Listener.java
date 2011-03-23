@@ -454,12 +454,6 @@ public final class Listener extends ContextLoaderListener {
         Log log = LogFactory.getLog(Listener.class);
         try {
 
-
-            if ("true".equalsIgnoreCase(System.getProperty("in_Memory"))) {
-                String filename = WebConstants.WEBAPP_NAME + "-test-runtime.properties";
-                File file = new File(OpenmrsUtil.getApplicationDataDirectory(), filename);
-                log.debug(filename + " delete=" + file.delete());
-            }
             Context.openSession();
 
             Context.shutdown();
