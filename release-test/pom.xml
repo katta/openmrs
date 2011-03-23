@@ -91,7 +91,7 @@
                                 <phase>integration-test</phase>
                                 <configuration>
                                     <includes>
-                                        <include>**/stories/InstallationWizard.java</include>
+                                        <include>**/stories/*.java</include>
                                     </includes>
                                 </configuration>
                                 <goals>

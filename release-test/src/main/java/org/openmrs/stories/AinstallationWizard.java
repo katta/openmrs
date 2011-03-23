@@ -7,7 +7,7 @@ import org.openmrs.steps.InstallationWizardSteps;
 
 import java.util.List;
 
-public class InstallationWizard extends Story {
+public class AinstallationWizard extends Story {
     @Override
     public List<CandidateSteps> candidateSteps()  {
         return new InstanceStepsFactory(configuration(),

@@ -20,7 +20,7 @@ public class InstallationWizardSteps extends Steps {
 
 	@Given("I am on the $wizard")
 	public void beginInstallation(String wizard) {
-		goTo("http://localhost:8080/openmrs-release-test/initialsetup");
+		goTo("http://localhost:8080/release-test/initialsetup");
 		assertPresenceOf(div().with(text(containsString(wizard))));
 	}
 
