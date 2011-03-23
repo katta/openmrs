@@ -39,7 +39,7 @@
 		<module>api</module>
 		<module>web</module>
 		<module>webapp</module>
-        <module>openmrs-release-test</module>
+        <module>release-test</module>
 	</modules>
 
 	<dependencyManagement>
