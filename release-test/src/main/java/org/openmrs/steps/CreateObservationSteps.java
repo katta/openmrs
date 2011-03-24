@@ -7,6 +7,7 @@ import org.openmrs.Steps;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.lift.find.HtmlTagFinder;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.openqa.selenium.lift.Finders.*;
 import static org.openqa.selenium.lift.Matchers.text;
@@ -29,13 +30,13 @@ public class CreateObservationSteps extends Steps {
 
     @Then("take me to Observation Management Page with Observation Management as heading")
     public void verifyManagementPage() {
-        assertPresenceOf(finderByXpath("/html/body/div[@id=\'pageBody\']/div[@id=\'content\']/h2").with(text(equalTo("Observation Management"))));
+        assertPresenceOf(div().with(text(containsString("Observation Management"))));
     }
 
 
     @Given("I am on the Observation Management Page")
     public void onFindObservationManagementPage() {
-        assertPresenceOf(finderByXpath("/html/body/div[@id=\'pageBody\']/div[@id=\'content\']/h2").with(text(equalTo("Observation Management"))));
+    	verifyManagementPage();
     }
 
     @When("I click on $addObsLink  link")
@@ -45,32 +46,29 @@ public class CreateObservationSteps extends Steps {
 
     @Then("take me to Add Observation page with $heading as heading and has a button with label $buttonText")
     public void verifyAddObservationPage(String heading, String buttonText) {
-        assertPresenceOf(finderByXpath("/html/body/div[@id=\'pageBody\']/div[@id=\'content\']/h2").with(text(equalTo(heading))));
+        assertPresenceOf(div().with(text(containsString(heading))));
         assertPresenceOf(button("Save Observation"));
 
     }
 
     @Given("I am on the Add Observation page")
     public void givenIamOnAddObservationPage() {
-        System.out.println("hi there");
-        assertPresenceOf(finderByXpath("/html/body/div[@id=\'pageBody\']/div[@id=\'content\']/h2").with(text(equalTo("Observation"))));
-        //  assertPresenceOf(button("Save Observation"));
-
+        assertPresenceOf(div().with(text(containsString("Observation"))));
     }
 
 
     @When("I type $name as person")
     public void enterPersonName(String name) {
         type(name, into(textbox().with(attribute("id", equalTo("person_id_selection")))));
-        HtmlTagFinder finder = link().with(attribute("class", equalTo("ui-corner-all")));
-        waitFor(finder);
-        clickOn(finder);
+        HtmlTagFinder link = link().with(attribute("class", equalTo("ui-corner-all")));
+        waitFor(link);
+        clickOn(link);
 
     }
 
     @When("I select Unknown Location as Location with index $index")
     public void selectLocation(int index) {
-        selectAValueInDropDownByXpath("/html/body/div[@id=\'pageBody\']/div[@id=\'content\']/form/fieldset/table[@id=\'obsTable\']/tbody/tr[4]/td/select[@id=\'location\']").selectByIndex(index);
+        selectAValueInDropDownByXpath("//table[@id=\'obsTable\']/tbody/tr[4]/td/select[@id=\'location\']").selectByIndex(index);
     }
 
     @When("I type $date as Observation Date")
@@ -81,8 +79,8 @@ public class CreateObservationSteps extends Steps {
     @When("I type $conceptQuestion as Concept Question")
     public void enterConceptQuestion(String conceptQuestion) {
         type(conceptQuestion, into(textbox().with(attribute("id", equalTo("conceptId_selection")))));
-        waitFor(finderByXpath("/html/body/ul[3]/li/a"));
-        clickOn(finderByXpath("/html/body/ul[3]/li/a"));
+        waitFor(finderByXpath("//ul[3]/li/a"));
+        clickOn(finderByXpath("//ul[3]/li/a"));
     }
 
     @When("I type $conceptAnswer as Concept Answer")
@@ -97,7 +95,7 @@ public class CreateObservationSteps extends Steps {
 
     @Then("display message Observation saved")
     public void verifySuccessMessage() {
-        assertPresenceOf(finderByXpath("/html/body/div[@id=\'pageBody\']/div[@id=\'content\']/div[@id=\'openmrs_msg\']").with(text(equalTo("Observation saved"))));
+        assertPresenceOf(div().with(text(containsString("Observation saved"))));
     }
 
 }
