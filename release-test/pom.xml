@@ -114,7 +114,7 @@
 					<contextPath>/openmrs</contextPath>
 					<systemProperties>
 						<systemProperty>
-							<name>testConfiguration</name>
+							<name>FUNCTIONAL_TEST_MODE</name>
 							<value>true</value>
 						</systemProperty>
 					</systemProperties>

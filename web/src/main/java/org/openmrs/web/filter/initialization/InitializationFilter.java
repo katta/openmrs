@@ -566,7 +566,7 @@ public class InitializationFilter extends StartupFilter {
 	 */
 	private File getRuntimePropertiesFile() {
 		String filename = WebConstants.WEBAPP_NAME + "-runtime.properties";
-		if ("true".equalsIgnoreCase(System.getProperty("testConfiguration")))
+		if ("true".equalsIgnoreCase(System.getProperty("FUNCTIONAL_TEST_MODE")))
 			filename = WebConstants.WEBAPP_NAME + "-test-runtime.properties";
 		File file = new File(OpenmrsUtil.getApplicationDataDirectory(), filename);
 		

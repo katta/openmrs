@@ -215,7 +215,7 @@ public class OpenmrsUtil {
 	
 	/**
 	 * Compares origList to newList returning map of differences
-	 *
+	 * 
 	 * @param origList
 	 * @param newList
 	 * @return [List toAdd, List toDelete] with respect to origList
@@ -294,7 +294,7 @@ public class OpenmrsUtil {
 	
 	/**
 	 * Return a string representation of the given file
-	 *
+	 * 
 	 * @param file
 	 * @return String file contents
 	 * @throws IOException
@@ -315,7 +315,7 @@ public class OpenmrsUtil {
 	
 	/**
 	 * Return a byte array representation of the given file
-	 *
+	 * 
 	 * @param file
 	 * @return byte[] file contents
 	 * @throws IOException
@@ -338,8 +338,8 @@ public class OpenmrsUtil {
 	/**
 	 * Copy file from inputStream onto the outputStream inputStream is not closed in this method
 	 * outputStream /is/ closed at completion of this method
-	 *
-	 * @param inputStream  Stream to copy from
+	 * 
+	 * @param inputStream Stream to copy from
 	 * @param outputStream Stream/location to copy to
 	 * @throws IOException thrown if an error occurs during read/write
 	 */
@@ -385,7 +385,7 @@ public class OpenmrsUtil {
 	
 	/**
 	 * Look for a file named <code>filename</code> in folder
-	 *
+	 * 
 	 * @param folder
 	 * @param filename
 	 * @return true/false whether filename exists in folder
@@ -408,7 +408,7 @@ public class OpenmrsUtil {
 	 * {@link AddOnStartup} to know which privs, upon startup or loading of a module, to insert into
 	 * the database if they do not exist already. These privileges are not allowed to be deleted.
 	 * They are marked as 'locked' in the administration screens.
-	 *
+	 * 
 	 * @return privileges core to the system
 	 * @see PrivilegeConstants
 	 * @see Context#checkCoreDataset()
@@ -446,7 +446,7 @@ public class OpenmrsUtil {
 	/**
 	 * All roles returned by this method are inserted into the database if they do not exist
 	 * already. These roles are also forbidden to be deleted from the administration screens.
-	 *
+	 * 
 	 * @return roles that are core to the system
 	 */
 	public static Map<String, String> getCoreRoles() {
@@ -476,7 +476,7 @@ public class OpenmrsUtil {
 	
 	/**
 	 * Initialize global settings Find and load modules
-	 *
+	 * 
 	 * @param p properties from runtime configuration
 	 */
 	public static void startup(Properties p) {
@@ -556,9 +556,9 @@ public class OpenmrsUtil {
 	
 	/**
 	 * Set the log4j log level for class <code>logClass</code> to <code>logLevel</code>.
-	 *
+	 * 
 	 * @param logClass optional string giving the class level to change. Defaults to
-	 *                 OpenmrsConstants.LOG_CLASS_DEFAULT . Should be something like org.openmrs.___
+	 *            OpenmrsConstants.LOG_CLASS_DEFAULT . Should be something like org.openmrs.___
 	 * @param logLevel one of OpenmrsConstants.LOG_LEVEL_*
 	 */
 	public static void applyLogLevel(String logClass, String logLevel) {
@@ -594,7 +594,7 @@ public class OpenmrsUtil {
 	/**
 	 * Takes a String like "size=compact|order=date" and returns a Map<String,String> from the keys
 	 * to the values.
-	 *
+	 * 
 	 * @param paramList <code>String</code> with a list of parameters
 	 * @return Map<String, String> of the parameters passed
 	 */
@@ -724,8 +724,8 @@ public class OpenmrsUtil {
 	
 	/**
 	 * Converts a collection to a String with a specified separator between all elements
-	 *
-	 * @param c         Collection to be joined
+	 * 
+	 * @param c Collection to be joined
 	 * @param separator string to put between all elements
 	 * @return a String representing the toString() of all elements in c, separated by separator
 	 */
@@ -887,7 +887,7 @@ public class OpenmrsUtil {
 	/**
 	 * Return a date that is the same day as the passed in date, but the hours and seconds are the
 	 * latest possible for that day.
-	 *
+	 * 
 	 * @param date date to adjust
 	 * @return a date that is the last possible time in the day
 	 */
@@ -912,7 +912,7 @@ public class OpenmrsUtil {
 	
 	/**
 	 * Recursively deletes files in the given <code>dir</code> folder
-	 *
+	 * 
 	 * @param dir File directory to delete
 	 * @return true/false whether the delete was completed successfully
 	 * @throws IOException if <code>dir</code> is not a directory
@@ -952,7 +952,7 @@ public class OpenmrsUtil {
 	
 	/**
 	 * Utility method to convert local URL to a File object.
-	 *
+	 * 
 	 * @param url an URL
 	 * @return file object for given URL or <code>null</code> if URL is not local
 	 * @should return null given null parameter
@@ -975,7 +975,7 @@ public class OpenmrsUtil {
 	 * API.</li>
 	 * </ul>
 	 * It is not recommended to use this method for big resources within JAR files.
-	 *
+	 * 
 	 * @param url resource URL
 	 * @return input stream for given resource
 	 * @throws IOException if any I/O error has occurred
@@ -1031,7 +1031,7 @@ public class OpenmrsUtil {
 	 * a) "{user.home}/.OpenMRS" on UNIX-based systems
 	 * b) "{user.home}\Application Data\OpenMRS" on Windows
 	 * </pre>
-	 *
+	 * 
 	 * @return The path to the directory on the file system that will hold miscellaneous data about
 	 *         the application (runtime properties, modules, etc)
 	 */
@@ -1060,7 +1060,7 @@ public class OpenmrsUtil {
 	
 	/**
 	 * Checks whether the current JVM version is at least Java 6.
-	 *
+	 * 
 	 * @throws ApplicationContextException if the current JVM version is earlier than Java 6
 	 */
 	public static void validateJavaVersion() {
@@ -1073,7 +1073,7 @@ public class OpenmrsUtil {
 	/**
 	 * Find the given folderName in the application data directory. Or, treat folderName like an
 	 * absolute url to a directory
-	 *
+	 * 
 	 * @param folderName
 	 * @return folder capable of storing information
 	 */
@@ -1102,8 +1102,8 @@ public class OpenmrsUtil {
 	
 	/**
 	 * Save the given xml document to the given outfile
-	 *
-	 * @param doc     Document to be saved
+	 * 
+	 * @param doc Document to be saved
 	 * @param outFile file pointer to the location the xml file is to be saved to
 	 */
 	public static void saveDocument(Document doc, File outFile) {
@@ -1156,8 +1156,8 @@ public class OpenmrsUtil {
 	
 	/**
 	 * Tests if the given String starts with any of the specified prefixes
-	 *
-	 * @param str      the string to test
+	 * 
+	 * @param str the string to test
 	 * @param prefixes an array of prefixes to test against
 	 * @return true if the String starts with any of the specified prefixes, otherwise false.
 	 */
@@ -1187,7 +1187,7 @@ public class OpenmrsUtil {
 	}
 	
 	public static Date fromDateHelper(Date comparisonDate, Integer withinLastDays, Integer withinLastMonths,
-	        Integer untilDaysAgo, Integer untilMonthsAgo, Date sinceDate, Date untilDate) {
+	                                  Integer untilDaysAgo, Integer untilMonthsAgo, Date sinceDate, Date untilDate) {
 		
 		Date ret = null;
 		if (withinLastDays != null || withinLastMonths != null) {
@@ -1205,7 +1205,7 @@ public class OpenmrsUtil {
 	}
 	
 	public static Date toDateHelper(Date comparisonDate, Integer withinLastDays, Integer withinLastMonths,
-	        Integer untilDaysAgo, Integer untilMonthsAgo, Date sinceDate, Date untilDate) {
+	                                Integer untilDaysAgo, Integer untilMonthsAgo, Date sinceDate, Date untilDate) {
 		
 		Date ret = null;
 		if (untilDaysAgo != null || untilMonthsAgo != null) {
@@ -1259,7 +1259,7 @@ public class OpenmrsUtil {
 	/**
 	 * Get the current user's date format Will look similar to "mm-dd-yyyy". Depends on user's
 	 * locale.
-	 *
+	 * 
 	 * @return a simple date format
 	 * @deprecated use {@link Context#getDateFormat()} or {@link
 	 *             #getDateFormat(Context#getLocale())} instead
@@ -1272,7 +1272,7 @@ public class OpenmrsUtil {
 	/**
 	 * Get the current user's date format Will look similar to "mm-dd-yyyy". Depends on user's
 	 * locale.
-	 *
+	 * 
 	 * @return a simple date format
 	 * @should return a pattern with four y characters in it
 	 * @should not allow the returned SimpleDateFormat to be modified
@@ -1318,7 +1318,7 @@ public class OpenmrsUtil {
 	
 	/**
 	 * Takes a String (e.g. a user-entered one) and parses it into an object of the specified class
-	 *
+	 * 
 	 * @param string
 	 * @param clazz
 	 * @return Object of type <code>clazz</code> with the data from <code>string</code>
@@ -1409,13 +1409,13 @@ public class OpenmrsUtil {
 	
 	/**
 	 * Uses reflection to translate a PatientSearch into a PatientFilter
-	 *
+	 * 
 	 * @deprecated see reportingcompatibility module
 	 */
 	@SuppressWarnings("unchecked")
 	@Deprecated
 	public static PatientFilter toPatientFilter(PatientSearch search, CohortSearchHistory history,
-	        EvaluationContext evalContext) {
+	                                            EvaluationContext evalContext) {
 		if (search.isSavedSearchReference()) {
 			PatientSearch ps = ((PatientSearchReportObject) Context.getReportObjectService().getReportObject(
 			    search.getSavedSearchId())).getPatientSearch();
@@ -1626,9 +1626,9 @@ public class OpenmrsUtil {
 	 * patient/person objects on their collections. Their collections are SortedSets which use the
 	 * compareTo method for equality as well. The compareTo method is currently optimized for
 	 * sorting, not for equality. A null <code>obj</code> will return false
-	 *
+	 * 
 	 * @param objects collection to loop over
-	 * @param obj     Object to look for in the <code>objects</code>
+	 * @param obj Object to look for in the <code>objects</code>
 	 * @return true/false whether the given object is found
 	 * @should use equals method for comparison instead of compareTo given List collection
 	 * @should use equals method for comparison instead of compareTo given SortedSet collection
@@ -1648,7 +1648,7 @@ public class OpenmrsUtil {
 	/**
 	 * Get a serializer that will do the common type of serialization and deserialization. Cycles of
 	 * objects are taken into account
-	 *
+	 * 
 	 * @return Serializer to do the (de)serialization
 	 * @deprecated - Use OpenmrsSerializer from
 	 *             Context.getSerializationService.getDefaultSerializer() Note, this uses a
@@ -1662,7 +1662,7 @@ public class OpenmrsUtil {
 	/**
 	 * Get a short serializer that will only do the very basic serialization necessary. This is
 	 * controlled by the objects that are being serialized via the @Replace methods
-	 *
+	 * 
 	 * @return Serializer to do the short (de)serialization
 	 * @see OpenmrsConstants#SHORT_SERIALIZATION
 	 * @deprecated - Use OpenmrsSerializer from
@@ -1678,7 +1678,7 @@ public class OpenmrsUtil {
 	 * True/false whether the current serialization is supposed to be a short serialization. A
 	 * shortened serialization This should be called from methods marked with the @Replace notation
 	 * that take in a single <code>Map</code> parameter.
-	 *
+	 * 
 	 * @param sessionMap current serialization session
 	 * @return true/false whether or not to do the shortened serialization
 	 * @deprecated - use SerializationService and OpenmrsSerializer implementation for Serialization
@@ -1691,8 +1691,8 @@ public class OpenmrsUtil {
 	/**
 	 * Gets an out File object. If date is not provided, the current timestamp is used. If user is
 	 * not provided, the user id is not put into the filename. Assumes dir is already created
-	 *
-	 * @param dir  directory to make the random filename in
+	 * 
+	 * @param dir directory to make the random filename in
 	 * @param date optional Date object used for the name
 	 * @param user optional User creating this file object
 	 * @return file new file that is able to be written to
@@ -1736,7 +1736,7 @@ public class OpenmrsUtil {
 	
 	/**
 	 * Creates a relatively acceptable unique string of the give size
-	 *
+	 * 
 	 * @return unique string
 	 */
 	public static String generateUid(Integer size) {
@@ -1755,7 +1755,7 @@ public class OpenmrsUtil {
 	
 	/**
 	 * Creates a uid of length 20
-	 *
+	 * 
 	 * @see #generateUid(Integer)
 	 */
 	public static String generateUid() {
@@ -1764,8 +1764,8 @@ public class OpenmrsUtil {
 	
 	/**
 	 * Post the given map of variables to the given url string
-	 *
-	 * @param urlString  valid http url to post data to
+	 * 
+	 * @param urlString valid http url to post data to
 	 * @param dataToPost Map<String, String> of key value pairs to post to urlString
 	 * @return response from urlString after posting
 	 */
@@ -1844,7 +1844,7 @@ public class OpenmrsUtil {
 	 * Convenience method to replace Properties.store(), which isn't UTF-8 compliant <br/>
 	 * NOTE: In Java 6, you will be able to pass the load() and store() methods a UTF-8
 	 * Reader/Writer object as an argument, making this method unnecessary.
-	 *
+	 * 
 	 * @param properties
 	 * @param file
 	 * @param comment
@@ -1873,10 +1873,10 @@ public class OpenmrsUtil {
 	 * Convenience method to replace Properties.store(), which isn't UTF-8 compliant NOTE: In Java
 	 * 6, you will be able to pass the load() and store() methods a UTF-8 Reader/Writer object as an
 	 * argument.
-	 *
+	 * 
 	 * @param properties
 	 * @param file
-	 * @param comment    (which appears in comments in properties file)
+	 * @param comment (which appears in comments in properties file)
 	 */
 	public static void storeProperties(Properties properties, OutputStream outStream, String comment) {
 		try {
@@ -1910,7 +1910,7 @@ public class OpenmrsUtil {
 	 * file. <br/>
 	 * NOTE: In Java 6, you will be able to pass the load() and store() methods a UTF-8
 	 * Reader/Writer object as an argument, making this method unnecesary.
-	 *
+	 * 
 	 * @param props the properties object to write into
 	 * @param input the input stream to read from
 	 * @deprecated use {@link #loadProperties(Properties, File)}
@@ -1931,8 +1931,8 @@ public class OpenmrsUtil {
 	
 	/**
 	 * Convenience method used to load properties from the given file.
-	 *
-	 * @param props        the properties object to be loaded into
+	 * 
+	 * @param props the properties object to be loaded into
 	 * @param propertyFile the properties file to read
 	 */
 	public static void loadProperties(Properties props, File propertyFile) {
@@ -1966,7 +1966,7 @@ public class OpenmrsUtil {
 	 * By default java will escape colons and equal signs when writing properites files. <br/>
 	 * <br/>
 	 * This method turns escaped colons into colons and escaped equal signs into just equal signs.
-	 *
+	 * 
 	 * @param value the value portion of a properties file to fix
 	 * @return the value with escaped characters fixed
 	 */
@@ -1980,7 +1980,7 @@ public class OpenmrsUtil {
 	
 	/**
 	 * Utility method for getting the translation for the passed code
-	 *
+	 * 
 	 * @param code the message key to lookup
 	 * @param args the replacement values for the translation string
 	 * @return the message, or if not found, the code
@@ -2045,7 +2045,7 @@ public class OpenmrsUtil {
 	 * <th>null</th>
 	 * </tr>
 	 * </table>
-	 *
+	 * 
 	 * @param username user name of the user with password to validated
 	 * @param password string that will be validated
 	 * @param systemId system id of the user with password to be validated
@@ -2122,9 +2122,7 @@ public class OpenmrsUtil {
 				}
 			}
 			catch (NumberFormatException nfe) {
-				log
-				        .warn("Error in global property <" + OpenmrsConstants.GP_PASSWORD_MINIMUM_LENGTH
-				                + "> must be an Integer");
+				log.warn("Error in global property <" + OpenmrsConstants.GP_PASSWORD_MINIMUM_LENGTH + "> must be an Integer");
 			}
 		}
 		
@@ -2207,7 +2205,7 @@ public class OpenmrsUtil {
 	
 	/**
 	 * A null-safe and exception safe way to close an inputstream or an outputstream
-	 *
+	 * 
 	 * @param closableStream an InputStream or OutputStream to close
 	 */
 	public static void closeStream(Closeable closableStream) {
@@ -2225,7 +2223,7 @@ public class OpenmrsUtil {
 	 * Convert a stack trace into a shortened version for easier viewing and data storage, excluding
 	 * those lines we are least concerned with; should average about 60% reduction in stack trace
 	 * length
-	 *
+	 * 
 	 * @param stackTrace original stack trace from an error
 	 * @return shortened stack trace
 	 * @should return null if stackTrace is null
@@ -2264,10 +2262,10 @@ public class OpenmrsUtil {
 	 * 2) {openmrs_app_dir}/{applicationName}_runtime.properties   // openmrs_app_dir is typically {user_home}/.OpenMRS
 	 * 3) {current directory}/{applicationname}_runtime.properties
 	 * </pre>
-	 *
+	 * 
 	 * @param applicationName (defaults to "openmrs") the name of the running OpenMRS application,
-	 *                        e.g. if you have deployed OpenMRS as a web application you would give the deployed
-	 *                        context path here
+	 *            e.g. if you have deployed OpenMRS as a web application you would give the deployed
+	 *            context path here
 	 * @return runtime properties, or null if none can be found
 	 * @see #getApplicationDataDirectory()
 	 * @since 1.8
@@ -2275,6 +2273,11 @@ public class OpenmrsUtil {
 	public static Properties getRuntimeProperties(String applicationName) {
 		if (applicationName == null)
 			applicationName = "openmrs";
+		
+		if ("true".equalsIgnoreCase(System.getProperty("FUNCTIONAL_TEST_MODE"))) {
+			log.info("In functional testing mode. Ignoring the existing runtime properties file");
+			return null;
+		}
 		
 		String filepath = null;
 		FileInputStream propertyStream = null;
@@ -2299,9 +2302,8 @@ public class OpenmrsUtil {
 			}
 		}
 		
-		String filename = applicationName + "-runtime.properties";
-		if ("true".equalsIgnoreCase(System.getProperty("testConfiguration")))
-			filename = applicationName + " ";
+		String filename = String.format("%s-runtime.properties", applicationName);
+		
 		// next look in the OpenMRS application data directory
 		if (propertyStream == null) {
 			filepath = OpenmrsUtil.getApplicationDataDirectory() + filename;
@@ -2340,15 +2342,14 @@ public class OpenmrsUtil {
 		}
 		catch (Exception ex) {
 			log.info("Got an error while attempting to load the runtime properties", ex);
-			log
-			        .warn("Unable to find a runtime properties file. Initial setup is needed. View the webapp to run the setup wizard.");
+			log.warn("Unable to find a runtime properties file. Initial setup is needed. View the webapp to run the setup wizard.");
 			return null;
 		}
 	}
 	
 	/**
 	 * Performs a case insensitive Comparison of two strings taking care of null values
-	 *
+	 * 
 	 * @param s1 the string to compare
 	 * @param s2 the string to compare
 	 * @return

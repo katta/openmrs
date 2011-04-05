@@ -487,7 +487,8 @@ public final class Listener extends ContextLoaderListener {
 			}
 		}
 		finally {
-			if ("true".equalsIgnoreCase(System.getProperty("testConfiguration"))) {
+			if ("true".equalsIgnoreCase(System.getProperty("FUNCTIONAL_TEST_MODE"))) {
+				//Delete the temporary file created for functional testing and shutdown the mysql daemon
 				String filename = WebConstants.WEBAPP_NAME + "-test-runtime.properties";
 				File file = new File(OpenmrsUtil.getApplicationDataDirectory(), filename);
 				log.debug(filename + " delete=" + file.delete());
