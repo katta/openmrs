@@ -126,16 +126,16 @@ public class ExtensionPointTag extends TagSupport implements BodyTag {
 		
 		if (extensionList != null) {
 			log.debug("Found " + extensionList.size() + " extensions");
-			if (requiredClass != null) {
+			if (requiredClass == null) {
+				validExtensions = extensionList;
+			} else {
 				try {
 					Class<?> clazz = Class.forName(requiredClass);
 					for (Extension ext : extensionList) {
 						if (!clazz.isAssignableFrom(ext.getClass())) {
-							log.warn("Extensions at this point (" + pointId + ") are "
-							        + "required to be of " + clazz + " or a subclass. " + ext.getClass() + " is not.");
-						}
-						else
-						{
+							log.warn("Extensions at this point (" + pointId + ") are " + "required to be of " + clazz
+							        + " or a subclass. " + ext.getClass() + " is not.");
+						} else {
 							validExtensions.add(ext);
 						}
 					}
