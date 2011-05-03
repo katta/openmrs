@@ -4501,6 +4501,52 @@
             baseTableName="visit_attribute" baseColumnNames="voided_by" referencedTableName="users"
             referencedColumnNames="user_id" />
     </changeSet>
+
+	<changeSet id="20110426-11701" author="zabil">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="provider" />
+			</not>
+		</preConditions>
+		<comment>
+			Create the provider table
+		</comment>
+		<createTable tableName="provider">
+			<column name="provider_id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="person_id" type="int"></column>
+			<column name="name" type="varchar(255)"></column>
+			<column name="identifier" type="varchar(255)"></column>			
+			<column name="creator" type="int">
+				<constraints nullable="false" />
+			</column>
+			<column name="date_created" type="datetime">
+				<constraints nullable="false" />
+			</column>
+			<column name="changed_by" type="int" />
+			<column name="date_changed" type="datetime" />
+			<column name="retired" type="tinyint" defaultValueNumeric="0">
+				<constraints nullable="false" />
+			</column>
+			<column name="retired_by" type="int(11)" />
+			<column name="date_retired" type="datetime" />
+			<column name="retired_reason" type="varchar(255)"
+				defaultValue="null" />
+			<column name="uuid" type="char(38)">
+				<constraints nullable="false" unique="true" />
+			</column>
+		</createTable>
+	<addForeignKeyConstraint constraintName="provider_changed_by_fk"
+			baseTableName="provider" baseColumnNames="changed_by"
+			referencedTableName="users" referencedColumnNames="user_id" />		
+		<addForeignKeyConstraint constraintName="provider_retired_by_fk"
+			baseTableName="provider" baseColumnNames="retired_by"
+			referencedTableName="users" referencedColumnNames="user_id" />
+        <addForeignKeyConstraint constraintName="provider_creator_fk"
+            baseTableName="provider" baseColumnNames="creator" referencedTableName="users"
+            referencedColumnNames="user_id" />
+	</changeSet>
 	
 </databaseChangeLog>
 

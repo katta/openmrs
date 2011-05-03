@@ -90,7 +90,10 @@
 		<mapping resource="org/openmrs/api/db/hibernate/VisitAttributeType.hbm.xml" />
 		<mapping resource="org/openmrs/api/db/hibernate/VisitAttribute.hbm.xml" />
 		<mapping resource="org/openmrs/api/db/hibernate/Visit.hbm.xml" />
-
+		
+		<!-- Provider -->
+		<mapping resource="org/openmrs/api/db/hibernate/Provider.hbm.xml" />
+		
   </session-factory>
 
 </hibernate-configuration>

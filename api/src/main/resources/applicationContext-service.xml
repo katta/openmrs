@@ -92,6 +92,7 @@
         <property name="messageSourceService"><ref bean="messageSourceService"/></property>
         <property name="activeListService"><ref bean="activeListService"/></property>
         <property name="visitService"><ref bean="visitService"/></property>
+        <property name="providerService"><ref bean="providerService"/></property>
 	</bean>	
 	
 	<bean id="context" class="org.openmrs.api.context.Context">
@@ -177,6 +178,9 @@
 	<bean id="visitDAO" class="org.openmrs.api.db.hibernate.HibernateVisitDAO">
         <property name="sessionFactory"><ref bean="sessionFactory"/></property>
     </bean>
+	<bean id="providerDAO" class="org.openmrs.api.db.hibernate.HibernateProviderDAO">
+        <property name="sessionFactory"><ref bean="sessionFactory"/></property>
+    </bean>
 	
 
 	<!--  **************************  SCHEDULER SERVICE  *************************  -->
@@ -253,7 +257,9 @@
 	<bean id="visitServiceTarget" class="org.openmrs.api.impl.VisitServiceImpl">
         <property name="visitDAO"><ref bean="visitDAO"/></property>
 	</bean>
-	
+	<bean id="providerServiceTarget" class="org.openmrs.api.impl.ProviderServiceImpl">
+        <property name="providerDAO"><ref bean="providerDAO"/></property>
+	</bean>	
 	
 	<!-- Cohort Service setup -->
 	<bean id="cohortServiceTarget" class="org.openmrs.api.impl.CohortServiceImpl">
@@ -571,6 +577,14 @@
 	<bean id="visitService" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
 	    <property name="transactionManager"><ref local="transactionManager"/></property>
 	    <property name="target"><ref local="visitServiceTarget"/></property>
+	    <property name="preInterceptors">
+	        <ref local="serviceInterceptors"/>
+	    </property>
+	    <property name="transactionAttributeSource"><ref local="transactionAttributeSource"/></property>
+    </bean>
+	<bean id="providerService" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+	    <property name="transactionManager"><ref local="transactionManager"/></property>
+	    <property name="target"><ref local="providerServiceTarget"/></property>
 	    <property name="preInterceptors">
 	        <ref local="serviceInterceptors"/>
 	    </property>
