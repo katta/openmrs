@@ -14,10 +14,18 @@
 package org.openmrs.api.impl;
 
 import java.util.List;
+import java.util.Vector;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.openmrs.Patient;
+import org.openmrs.Person;
 import org.openmrs.Provider;
 import org.openmrs.api.ProviderService;
+import org.openmrs.api.context.Context;
 import org.openmrs.api.db.ProviderDAO;
+import org.openmrs.util.OpenmrsConstants;
 
 /**
  * Default implementation of the {@link ProviderService}. This class should not be used on its own.
@@ -29,10 +37,14 @@ public class ProviderServiceImpl extends BaseOpenmrsService implements ProviderS
 	
 	private ProviderDAO dao;
 	
+	private final Log log = LogFactory.getLog(this.getClass());
+	
 	/**
-	 * @see org.openmrs.api.ProviderService#setProviderDAO(org.openmrs.api.db.ProviderDAO )
+	 * Sets the data access object for Concepts. The dao is used for saving and getting concepts
+	 * to/from the database
+	 * 
+	 * @param dao The data access object to use
 	 */
-	@Override
 	public void setProviderDAO(ProviderDAO dao) {
 		this.dao = dao;
 	}
@@ -42,7 +54,14 @@ public class ProviderServiceImpl extends BaseOpenmrsService implements ProviderS
 	 */
 	@Override
 	public List<Provider> getAllProviders() {
-		return dao.getAllProviders();
+		return getAllProviders(true);
+	}
+	
+	/**
+	 * @see org.openmrs.api.ProviderService#getAllProviders(boolean)
+	 */
+	public List<Provider> getAllProviders(boolean includeRetired) {
+		return dao.getAllProviders(includeRetired);
 	}
 	
 	/**
@@ -75,11 +94,16 @@ public class ProviderServiceImpl extends BaseOpenmrsService implements ProviderS
 	}
 	
 	/**
+	 * @throws Exception
 	 * @see org.openmrs.api.ProviderService#saveProvider(org.openmrs.Provider)
 	 */
 	@Override
-	public Provider saveProvider(Provider provider) {
-		return dao.saveProvider(provider);
+	public Provider saveProvider(Provider provider) throws Exception {
+		if (provider.isValid())
+			return dao.saveProvider(provider);
+		else
+			throw new Exception("Provider Name or Person Required");
+		
 	}
 	
 	/**
@@ -87,7 +111,7 @@ public class ProviderServiceImpl extends BaseOpenmrsService implements ProviderS
 	 */
 	@Override
 	public Provider getProviderbyUuid(String uuid) {
-		return dao.getProviderUuid(uuid);
+		return dao.getProviderByUuid(uuid);
 	}
 	
 	/**
@@ -95,7 +119,19 @@ public class ProviderServiceImpl extends BaseOpenmrsService implements ProviderS
 	 */
 	@Override
 	public Integer getCountOfProviders(String query) {
-		return dao.getCountOfProviders(query);
+		
+		List<Provider> provider = new Vector<Provider>();
+		if (StringUtils.isBlank(query) || query.length() < getMinSearchCharacters())
+			return 0;
+		
+		// if there is a number in the query string
+		if (query.matches(".*\\d+.*")) {
+			log.debug("[Identifier search] Query: " + query);
+			return dao.getCountOfProviders(null, query);
+		} else {
+			// there is no number in the string, search on name
+			return dao.getCountOfProviders(query, null);
+		}
 	}
 	
 	/**
@@ -105,7 +141,46 @@ public class ProviderServiceImpl extends BaseOpenmrsService implements ProviderS
 	@Override
 	public List<Provider> getProviders(String query, Integer start, Integer length) {
 		
-		return dao.getProviders(query, start, length);
+		List<Provider> provider = new Vector<Provider>();
+		if (StringUtils.isBlank(query) || query.length() < getMinSearchCharacters())
+			return provider;
+		
+		// if there is a number in the query string
+		if (query.matches(".*\\d+.*")) {
+			log.debug("[Identifier search] Query: " + query);
+			return dao.getProviders(null, query, start, length);
+		} else {
+			// there is no number in the string, search on name
+			return dao.getProviders(query, null, start, length);
+		}
+		
 	}
 	
+	/**
+	 * @see org.openmrs.api.ProviderService#getProvider(java.lang.String)
+	 */
+	@Override
+	public List<Provider> getProvider(String query) {
+		return getProviders(query, 0, null);
+	}
+	
+	/**
+	 * Method returns the minimum number of search characters
+	 * 
+	 * @return the value of min search characters
+	 */
+	private int getMinSearchCharacters() {
+		int minSearchCharacters = OpenmrsConstants.GLOBAL_PROPERTY_DEFAULT_MIN_SEARCH_CHARACTERS;
+		String minSearchCharactersStr = Context.getAdministrationService().getGlobalProperty(
+		    OpenmrsConstants.GLOBAL_PROPERTY_MIN_SEARCH_CHARACTERS);
+		
+		try {
+			minSearchCharacters = Integer.valueOf(minSearchCharactersStr);
+		}
+		catch (NumberFormatException e) {
+			//do nothing
+		}
+		
+		return minSearchCharacters;
+	}
 }

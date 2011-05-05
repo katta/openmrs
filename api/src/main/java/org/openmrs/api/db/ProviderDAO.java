@@ -18,14 +18,16 @@ import java.util.List;
 import org.openmrs.Provider;
 
 /**
- * @author zabilcm
+ * Data  Access function for  Provider
+ * @since 1.9
  */
 public interface ProviderDAO {
 	
 	/**
-	 * @return gets all Providers
+	 * Gets all Providers
+	 * @param includeRetired - whether or not to include retired Provider
 	 */
-	List<Provider> getAllProviders();
+	List<Provider> getAllProviders(boolean includeRetired);
 	
 	/**
 	 * Saves/Updates a given Provider
@@ -48,20 +50,25 @@ public interface ProviderDAO {
 	 * @return Provider gets the Provider based on uuid
 	 */
 	
-	public Provider getProviderUuid(String uuid);
+	public Provider getProviderByUuid(String uuid);
 	
 	/**
-	 * @param query
-	 * @return Integer gets the count of Providers based on a query
+	 * 
+	 * @param identifier
+	 * @param name
+	 * @param start
+	 * @param length
+	 * @return List of  Providers
 	 */
-	
-	public Integer getCountOfProviders(String query);
+	public List<Provider> getProviders(String name, String identifier, Integer start, Integer length);
 	
 	/**
-	 * @param query ,start,length
-	 * @return Integer gets the list of Providers based on a query and start position and length for
-	 *         Pagination
+	 * 
+	 * 
+	 * @param name
+	 * @param identifier
+	 * @return Count of providers satisfying the given query
 	 */
-	public List<Provider> getProviders(String query, Integer start, Integer length);
+	public Integer getCountOfProviders(String name, String identifier);
 	
 }

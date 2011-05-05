@@ -28,15 +28,8 @@ import org.springframework.transaction.annotation.Transactional;
 public interface ProviderService extends OpenmrsService {
 	
 	/**
-	 * Sets the data access object for Concepts. The dao is used for saving and getting concepts
-	 * to/from the database
-	 * 
-	 * @param dao The data access object to use
-	 */
-	public void setProviderDAO(ProviderDAO dao);
-	
-	/**
-	 * Gets all providers.
+	 * Gets all providers. includes retired Provider.This method delegates to the
+	 * #getAllProviders(boolean) method
 	 * 
 	 * @return a list of provider objects.
 	 * @should get all providers
@@ -44,6 +37,15 @@ public interface ProviderService extends OpenmrsService {
 	
 	@Transactional(readOnly = true)
 	public List<Provider> getAllProviders();
+	
+	/**
+	 * Gets all Provider
+	 * 
+	 * @param includeRetired - whether or not to include retired Provider
+	 * @should get all providers that are unretired
+	 */
+	@Transactional(readOnly = true)
+	public List<Provider> getAllProviders(boolean includeRetired);
 	
 	/**
 	 * Retires a given Provider
@@ -77,37 +79,62 @@ public interface ProviderService extends OpenmrsService {
 	 * @return the provider by it's id
 	 * @should get provider given ID
 	 */
+	@Transactional(readOnly = true)
 	public Provider getProvider(Integer providerId);
 	
 	/**
 	 * @param provider
 	 * @return the Provider object after saving it in the database
-	 * @should save a Provider
+	 * @throws Exception
+	 * @should save a Provider with provider name alone
+	 * @should save a Provider with Person alone
+	 * @should not save a Provider with both name and person
+	 * @should not save a Provider with both name and person being null
 	 */
 	
-	public Provider saveProvider(Provider provider);
+	public Provider saveProvider(Provider provider) throws Exception;
 	
 	/**
 	 * @param string
 	 * @return the Provider object having the given uuid
 	 * @should get provider given Uuid
 	 */
+	@Transactional(readOnly = true)
 	public Provider getProviderbyUuid(String uuid);
+	
+	/**
+	 * @param string
+	 * @return list of Provider object matching the string
+	 * @should should force search string to be greater than minsearchcharacters global property
+	 */
+	@Transactional(readOnly = true)
+	public List<Provider> getProvider(String query);
 	
 	/**
 	 * @param query
 	 * @param start
 	 * @param length
 	 * @return the list of Providers given the query , current page and page length
-	 * @should get provider given a query and page no and size
+	 * @should force search string to be greater than minsearchcharacters global property
+	 * @should fetch provider with given identifier with case in sensitive
+	 * @should fetch provider with given name with case in sensitive
+	 * @should not fail when minimum search characters is null
+	 * @should not fail when minimum search characters is invalid integer
+	 * @should fetch provider by matching query string with any unVoided PersonName's Given Name
+	 * @should fetch provider by matching query string with any unVoided PersonName's middleName
+	 * @should fetch provider by matching query string with any unVoided Person's familyName
+	 * @should not fetch provider if the query string matches with any voided Person name for that
+	 *         Provider
 	 */
+	@Transactional(readOnly = true)
 	public List<Provider> getProviders(String query, Integer start, Integer length);
 	
 	/**
 	 * @param query
 	 * @return Count-Integer
-	 * @should getcount of provider given a query Return the Count of Providers for a given query.
+	 * @should fetch number of provider matching given query.
 	 */
+	@Transactional(readOnly = true)
 	public Integer getCountOfProviders(String query);
 	
 }
