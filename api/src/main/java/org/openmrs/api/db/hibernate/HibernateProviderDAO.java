@@ -17,6 +17,7 @@ import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
+import org.hibernate.classic.Session;
 import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.IlikeExpression;
 import org.hibernate.criterion.LogicalExpression;
@@ -25,6 +26,7 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.Provider;
+import org.openmrs.ProviderAttributeType;
 import org.openmrs.api.db.ProviderDAO;
 
 /**
@@ -46,22 +48,18 @@ public class HibernateProviderDAO implements ProviderDAO {
 	 */
 	@Override
 	public List<Provider> getAllProviders(boolean includeRetired) {
-		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Provider.class);
-		if (!includeRetired) {
-			criteria.add(Expression.eq("retired", false));
-		} else {
-			//push retired Provider to the end of the returned list
-			criteria.addOrder(Order.asc("retired"));
-		}
-		criteria.addOrder(Order.asc("name"));
-		return criteria.list();
+		return getAll(includeRetired, Provider.class);
+	}
+	
+	private Session getSession() {
+		return sessionFactory.getCurrentSession();
 	}
 	
 	/**
 	 * @see org.openmrs.api.db.ProviderDAO#saveProvider(org.openmrs.Provider)
 	 */
 	public Provider saveProvider(Provider provider) {
-		sessionFactory.getCurrentSession().saveOrUpdate(provider);
+		getSession().saveOrUpdate(provider);
 		return provider;
 	}
 	
@@ -70,7 +68,7 @@ public class HibernateProviderDAO implements ProviderDAO {
 	 */
 	@Override
 	public void deleteProvider(Provider provider) {
-		sessionFactory.getCurrentSession().delete(provider);
+		getSession().delete(provider);
 	}
 	
 	/**
@@ -78,7 +76,7 @@ public class HibernateProviderDAO implements ProviderDAO {
 	 */
 	@Override
 	public Provider getProvider(Integer id) {
-		return (Provider) sessionFactory.getCurrentSession().load(Provider.class, id);
+		return (Provider) getSession().load(Provider.class, id);
 	}
 	
 	/**
@@ -86,9 +84,7 @@ public class HibernateProviderDAO implements ProviderDAO {
 	 */
 	@Override
 	public Provider getProviderByUuid(String uuid) {
-		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Provider.class);
-		criteria.add(Restrictions.eq("uuid", uuid));
-		return (Provider) criteria.uniqueResult();
+		return getByUuid(uuid, Provider.class);
 	}
 	
 	/**
@@ -113,7 +109,7 @@ public class HibernateProviderDAO implements ProviderDAO {
 	 * @return Criteria
 	 */
 	private Criteria prepareProviderCriteria(String name, String identifier) {
-		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Provider.class);
+		Criteria criteria = getSession().createCriteria(Provider.class);
 		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		if (name != null) {
 			criteria.createCriteria("person", "p").createAlias("names", "personName");
@@ -152,6 +148,65 @@ public class HibernateProviderDAO implements ProviderDAO {
 		Criteria criteria = prepareProviderCriteria(name, identifier);
 		criteria.setProjection(Projections.countDistinct("providerId"));
 		return (Integer) criteria.uniqueResult();
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.openmrs.api.db.ProviderDAO#getAllProviderAttributeTypes(boolean)
+	 */
+	@Override
+	public List<ProviderAttributeType> getAllProviderAttributeTypes(boolean includeRetired) {
+		return getAll(includeRetired, ProviderAttributeType.class);
+	}
+	
+	private <T> List<T> getAll(boolean includeRetired, Class<T> clazz) {
+		Criteria criteria = getSession().createCriteria(clazz);
+		if (!includeRetired) {
+			criteria.add(Expression.eq("retired", false));
+		} else {
+			//push retired Provider to the end of the returned list
+			criteria.addOrder(Order.asc("retired"));
+		}
+		criteria.addOrder(Order.asc("name"));
+		return criteria.list();
+	}
+	
+	private <T> T getByUuid(String uuid, Class<T> clazz) {
+		Criteria criteria = getSession().createCriteria(clazz);
+		criteria.add(Restrictions.eq("uuid", uuid));
+		return (T) criteria.uniqueResult();
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.openmrs.api.db.ProviderDAO#getProviderAttributeType(java.lang.Integer)
+	 */
+	@Override
+	public ProviderAttributeType getProviderAttributeType(Integer providerAttributeTypeId) {
+		return (ProviderAttributeType) getSession().load(ProviderAttributeType.class, providerAttributeTypeId);
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.openmrs.api.db.ProviderDAO#getProviderAttributeTypeByUuid(java.lang.String)
+	 */
+	@Override
+	public ProviderAttributeType getProviderAttributeTypeByUuid(String uuid) {
+		return getByUuid(uuid, ProviderAttributeType.class);
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.openmrs.api.db.ProviderDAO#saveProviderAttributeType(org.openmrs.ProviderAttributeType)
+	 */
+	@Override
+	public ProviderAttributeType saveProviderAttributeType(ProviderAttributeType providerAttributeType) {
+		getSession().saveOrUpdate(providerAttributeType);
+		return providerAttributeType;
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.openmrs.api.db.ProviderDAO#deleteProviderAttributeType(org.openmrs.ProviderAttributeType)
+	 */
+	@Override
+	public void deleteProviderAttributeType(ProviderAttributeType providerAttributeType) {
+		getSession().delete(providerAttributeType);
 	}
 	
 }

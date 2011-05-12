@@ -15,6 +15,7 @@ package org.openmrs.api;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -29,6 +30,7 @@ import org.openmrs.GlobalProperty;
 import org.openmrs.Person;
 import org.openmrs.PersonName;
 import org.openmrs.Provider;
+import org.openmrs.ProviderAttributeType;
 import org.openmrs.api.context.Context;
 import org.openmrs.test.BaseContextSensitiveTest;
 import org.openmrs.test.Verifies;
@@ -44,12 +46,15 @@ public class ProviderServiceTest extends BaseContextSensitiveTest {
 	
 	private static final String PROVIDERS_INITIAL_XML = "org/openmrs/api/include/ProviderServiceTest-initial.xml";
 	
+	private static final String PROVIDER_ATTRIBUTE_TYPES_XML = "org/openmrs/api/include/ProviderServiceTest-providerAttributes.xml";
+	
 	private ProviderService service;
 	
 	@Before
 	public void before() throws Exception {
 		service = Context.getProviderService();
 		executeDataSet(PROVIDERS_INITIAL_XML);
+		executeDataSet(PROVIDER_ATTRIBUTE_TYPES_XML);
 	}
 	
 	@Test
@@ -242,6 +247,102 @@ public class ProviderServiceTest extends BaseContextSensitiveTest {
 		person.addName(new PersonName("Hippot", "A", "B"));
 		Context.getPersonService().savePerson(person);
 		assertEquals(1, service.getCountOfProviders("Hippo").intValue());
+	}
+	
+	/**
+	 * @see ProviderService#getProviderAttributeType(Integer)
+	 * @verifies get provider attribute type for the given id
+	 */
+	@Test
+	public void getProviderAttributeType_shouldGetProviderAttributeTypeForTheGivenId() throws Exception {
+		ProviderAttributeType providerAttributeType = service.getProviderAttributeType(1);
+		assertEquals("Audit Date", providerAttributeType.getName());
+		assertEquals("9516cc50-6f9f-11e0-8414-001e378eb67e", providerAttributeType.getUuid());
+	}
+	
+	/**
+	 * @see ProviderService#purgeProviderAttributeType(ProviderAttributeType)
+	 * @verifies delete a provider attribute type
+	 */
+	@Test
+	public void purgeProviderAttributeType_shouldDeleteAProviderAttributeType() throws Exception {
+		int size = service.getAllProviderAttributeTypes().size();
+		ProviderAttributeType providerAttributeType = service.getProviderAttributeType(1);
+		service.purgeProviderAttributeType(providerAttributeType);
+		assertEquals(size - 1, service.getAllProviderAttributeTypes().size());
+	}
+	
+	/**
+	 * @see ProviderService#retireProviderAttributeType(ProviderAttributeType,String)
+	 * @verifies retire provider type attribute
+	 */
+	@Test
+	public void retireProviderAttributeType_shouldRetireProviderTypeAttribute() throws Exception {
+		ProviderAttributeType providerAttributeType = service.getProviderAttributeType(1);
+		assertFalse(providerAttributeType.isRetired());
+		assertNull(providerAttributeType.getRetireReason());
+		service.retireProviderAttributeType(providerAttributeType, "retire reason");
+		assertTrue(providerAttributeType.isRetired());
+		assertEquals("retire reason", providerAttributeType.getRetireReason());
+		assertEquals(0, service.getAllProviderAttributeTypes(false).size());
+	}
+	
+	/**
+	 * @see ProviderService#saveProviderAttributeType(ProviderAttributeType)
+	 * @verifies save the provider attribute type
+	 */
+	@Test
+	public void saveProviderAttributeType_shouldSaveTheProviderAttributeType() throws Exception {
+		int size = service.getAllProviderAttributeTypes().size();
+		ProviderAttributeType providerAttributeType = new ProviderAttributeType();
+		providerAttributeType.setName("new");
+		providerAttributeType.setDatatype("string");
+		providerAttributeType = service.saveProviderAttributeType(providerAttributeType);
+		assertEquals(size + 1, service.getAllProviderAttributeTypes().size());
+		assertNotNull(providerAttributeType.getId());
+	}
+	
+	/**
+	 * @see ProviderService#unretireProviderAttributeType(ProviderAttributeType)
+	 * @verifies unretire a provider attribute type
+	 */
+	@Test
+	public void unretireProviderAttributeType_shouldUnretireAProviderAttributeType() throws Exception {
+		ProviderAttributeType providerAttributeType = service.getProviderAttributeType(1);
+		service.unretireProviderAttributeType(providerAttributeType);
+		assertFalse(providerAttributeType.isRetired());
+		assertNull(providerAttributeType.getRetireReason());
+	}
+	
+	/**
+	 * @see ProviderService#getProviderAttributeTypeByUuid(String)
+	 * @verifies get the provider attribute type by it's uuid
+	 */
+	@Test
+	public void getProviderAttributeTypeByUuid_shouldGetTheProviderAttributeTypeByItsUuid() throws Exception {
+		ProviderAttributeType providerAttributeType = service
+		        .getProviderAttributeTypeByUuid("9516cc50-6f9f-11e0-8414-001e378eb67e");
+		assertEquals("Audit Date", providerAttributeType.getName());
+	}
+	
+	/**
+	 * @see ProviderService#getAllProviderAttributeTypes()
+	 * @verifies get all provider attribute types including retired
+	 */
+	@Test
+	public void getAllProviderAttributeTypes_shouldGetAllProviderAttributeTypesIncludingRetired() throws Exception {
+		List<ProviderAttributeType> types = service.getAllProviderAttributeTypes();
+		assertEquals(2, types.size());
+	}
+	
+	/**
+	 * @see ProviderService#getAllProviderAttributeTypes(Boolean)
+	 * @verifies get all provider attribute types excluding retired
+	 */
+	@Test
+	public void getAllProviderAttributeTypes_shouldGetAllProviderAttributeTypesExcludingRetired() throws Exception {
+		List<ProviderAttributeType> types = service.getAllProviderAttributeTypes(false);
+		assertEquals(1, types.size());
 	}
 	
 }

@@ -16,7 +16,7 @@ package org.openmrs.api;
 import java.util.List;
 
 import org.openmrs.Provider;
-import org.openmrs.api.db.ProviderDAO;
+import org.openmrs.ProviderAttributeType;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -137,4 +137,79 @@ public interface ProviderService extends OpenmrsService {
 	@Transactional(readOnly = true)
 	public Integer getCountOfProviders(String query);
 	
+	/**
+	 * Gets all provider attribute types including retired provider attribute types. This method delegates to the
+	 * #getAllProviderAttributeTypes(boolean) method
+	 * 
+	 * @return a list of provider attribute type objects.
+	 * @should get all provider attribute types including retired
+	 */
+	@Transactional(readOnly = true)
+	public List<ProviderAttributeType> getAllProviderAttributeTypes();
+	
+	/**
+	 * Gets all provider attribute types including retired provider attribute types. This method delegates to the
+	 * #getAllProviderAttributeTypes(boolean) method
+	 *
+	 * @param includeRetired boolean value to indicate whether to include retired records or not
+	 * @return a list of provider attribute type objects.
+	 * @should get all provider attribute types excluding retired
+	 * @should get all provider attribute types including retired
+	 */
+	@Transactional(readOnly = true)
+	public List<ProviderAttributeType> getAllProviderAttributeTypes(Boolean includeRetired);
+	
+	/**
+	 * Gets a provider attribute type by it's id
+	 * 
+	 * @param providerAttributeTypeId the provider attribute type id
+	 * @return the provider type attribute by it's id
+	 * @should get provider attribute type for the given id
+	 */
+	public ProviderAttributeType getProviderAttributeType(Integer providerAttributeTypeId);
+	
+	/**
+	 * Get a provider attribute type by it's uuid
+	 * 
+	 * @param uuid the uuid of the provider attribute type
+	 * @return the provider attribute type for the given id
+	 * @should get the provider attribute type by it's uuid
+	 */
+	public ProviderAttributeType getProviderAttributeTypeByUuid(String uuid);
+	
+	/**
+	 * Save the provider attribute type
+	 * 
+	 * @param providerAttributeType the provider attribute type to be saved
+	 * @return the saved provider attribute type
+	 * @should save the provider attribute type
+	 */
+	public ProviderAttributeType saveProviderAttributeType(ProviderAttributeType providerAttributeType);
+	
+	/**
+	 * Retire a provider attribute type
+	 * 
+	 * @param providerAttributeType the provider attribute type to be retired
+	 * @param reason for retiring the provider attribute type
+	 * @return the retired provider attribute type
+	 * @should retire provider type attribute
+	 */
+	public ProviderAttributeType retireProviderAttributeType(ProviderAttributeType providerAttributeType, String reason);
+	
+	/**
+	 * Un-Retire a provider attribute type
+	 * 
+	 * @param providerAttributeType the provider type attribute to unretire
+	 * @return the unretire provider attribute type
+	 * @should unretire a provider attribute type
+	 */
+	public ProviderAttributeType unretireProviderAttributeType(ProviderAttributeType providerAttributeType);
+	
+	/**
+	 * Deletes a provider attribute type
+	 * 
+	 * @param providerAttributeType provider attribute type to be deleted
+	 * @should delete a provider attribute type
+	 */
+	public void purgeProviderAttributeType(ProviderAttributeType providerAttributeType);
 }

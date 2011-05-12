@@ -22,6 +22,7 @@ import org.apache.commons.logging.LogFactory;
 import org.openmrs.Patient;
 import org.openmrs.Person;
 import org.openmrs.Provider;
+import org.openmrs.ProviderAttributeType;
 import org.openmrs.api.ProviderService;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.db.ProviderDAO;
@@ -182,5 +183,69 @@ public class ProviderServiceImpl extends BaseOpenmrsService implements ProviderS
 		}
 		
 		return minSearchCharacters;
+	}
+	
+	/**
+	 * @see org.openmrs.api.ProviderService#getAllProviderAttributeTypes()
+	 */
+	@Override
+	public List<ProviderAttributeType> getAllProviderAttributeTypes() {
+		return dao.getAllProviderAttributeTypes(true);
+	}
+	
+	/**
+	 * @see org.openmrs.api.ProviderService#getAllProviderAttributeTypes(java.lang.Boolean)
+	 */
+	@Override
+	public List<ProviderAttributeType> getAllProviderAttributeTypes(Boolean includeRetired) {
+		return dao.getAllProviderAttributeTypes(includeRetired);
+	}
+	
+	/**
+	 * @see org.openmrs.api.ProviderService#getProviderAttributeType(java.lang.Integer)
+	 */
+	@Override
+	public ProviderAttributeType getProviderAttributeType(Integer providerAttributeTypeId) {
+		return dao.getProviderAttributeType(providerAttributeTypeId);
+	}
+	
+	/**
+	 * @see org.openmrs.api.ProviderService#getProviderAttributeTypeByUuid(java.lang.String)
+	 */
+	@Override
+	public ProviderAttributeType getProviderAttributeTypeByUuid(String uuid) {
+		return dao.getProviderAttributeTypeByUuid(uuid);
+	}
+	
+	/**
+	 * @see org.openmrs.api.ProviderService#saveProviderAttributeType(org.openmrs.ProviderAttributeType)
+	 */
+	@Override
+	public ProviderAttributeType saveProviderAttributeType(ProviderAttributeType providerAttributeType) {
+		return dao.saveProviderAttributeType(providerAttributeType);
+	}
+	
+	/**
+	 * @see org.openmrs.api.ProviderService#retireProviderAttributeType(org.openmrs.ProviderAttributeType, java.lang.String)
+	 */
+	@Override
+	public ProviderAttributeType retireProviderAttributeType(ProviderAttributeType providerAttributeType, String reason) {
+		return saveProviderAttributeType(providerAttributeType);
+	}
+	
+	/**
+	 * @see org.openmrs.api.ProviderService#unretireProviderAttributeType(org.openmrs.ProviderAttributeType)
+	 */
+	@Override
+	public ProviderAttributeType unretireProviderAttributeType(ProviderAttributeType providerAttributeType) {
+		return dao.saveProviderAttributeType(providerAttributeType);
+	}
+	
+	/**
+	 * @see org.openmrs.api.ProviderService#purgeProviderAttributeType(org.openmrs.ProviderAttributeType)
+	 */
+	@Override
+	public void purgeProviderAttributeType(ProviderAttributeType providerAttributeType) {
+		dao.deleteProviderAttributeType(providerAttributeType);
 	}
 }

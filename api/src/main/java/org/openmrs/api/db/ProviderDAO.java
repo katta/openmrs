@@ -16,6 +16,8 @@ package org.openmrs.api.db;
 import java.util.List;
 
 import org.openmrs.Provider;
+import org.openmrs.ProviderAttributeType;
+import org.openmrs.api.ProviderService;
 
 /**
  * Data  Access function for  Provider
@@ -70,5 +72,31 @@ public interface ProviderDAO {
 	 * @return Count of providers satisfying the given query
 	 */
 	public Integer getCountOfProviders(String name, String identifier);
+	
+	/**
+	 * @see ProviderService#getAllProviderAttributeTypes(Boolean)
+	 * @see ProviderService#getAllProviderAttributeTypes()
+	 */
+	List<ProviderAttributeType> getAllProviderAttributeTypes(boolean includeRetired);
+	
+	/**
+	 * @see ProviderService#getProviderAttributeType(Integer)
+	 */
+	ProviderAttributeType getProviderAttributeType(Integer providerAttributeTypeId);
+	
+	/**
+	 * @see ProviderService#getProviderAttributeTypeByUuid(String)
+	 */
+	ProviderAttributeType getProviderAttributeTypeByUuid(String uuid);
+	
+	/**
+	 * @see ProviderService#saveProviderAttributeType(ProviderAttributeType)
+	 */
+	ProviderAttributeType saveProviderAttributeType(ProviderAttributeType providerAttributeType);
+	
+	/**
+	 * @see ProviderService#purgeProviderAttributeType(ProviderAttributeType)
+	 */
+	void deleteProviderAttributeType(ProviderAttributeType providerAttributeType);
 	
 }
