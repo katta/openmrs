@@ -742,6 +742,7 @@
 	<bean id="personAddressValidator" class="org.openmrs.validator.PersonAddressValidator"/>
 	<bean id="visitTypeValidator" class="org.openmrs.validator.VisitTypeValidator" />
 	<bean id="visitAttributeTypeValidator" class="org.openmrs.validator.VisitAttributeTypeValidator" />
+	<bean id="providerAttributeTypeValidator" class="org.openmrs.validator.ProviderAttributeTypeValidator" />	
 	<bean id="encounterValidator" class="org.openmrs.validator.EncounterValidator" />
 	<bean id="providerValidator" class="org.openmrs.validator.ProviderValidator" />
 

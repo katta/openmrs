@@ -239,6 +239,8 @@
 				<prop key="admin/visits/visitAttributeType.list">visitAttributeTypeList</prop>
 				<prop key="admin/visits/visitAttributeType.form">visitAttributeTypeForm</prop>
 				<prop key="admin/provider/provider.form">providerForm</prop>
+				<prop key="admin/provider/providerAttributeType.list">providerAttributeTypeList</prop>
+				<prop key="admin/provider/providerAttributeType.form">providerAttributeTypeForm</prop>				
 			</props>
 		</property>
 	</bean>
@@ -1011,6 +1013,25 @@
 		<property name="formView"><value>/admin/visits/visitAttributeTypeForm</value></property>
 		<property name="successView"><value>visitAttributeType.list</value></property>
 	</bean>
+	<!-- ** /Visit Attribute Type ** -->
+
+	<!-- ** Provider Attribute Type ** -->
+	<bean id="providerAttributeTypeList"
+		class="org.openmrs.web.controller.provider.ProviderAttributeTypeListController">
+		<property name="commandName"><value>providerAttributeTypeList</value></property>
+		<property name="formView"><value>/admin/provider/providerAttributeTypeList</value></property>
+		<property name="successView"><value>providerAttributeType.list</value></property>
+	</bean>
+	<!--  Form Controller for the add/edit provider attribute types page -->
+	<bean id="providerAttributeTypeForm"
+		class="org.openmrs.web.controller.provider.ProviderAttributeTypeFormController">
+		<property name="commandName"><value>providerAttributeType</value></property>
+		<property name="validator">
+			<ref bean="providerAttributeTypeValidator" />
+		</property>
+		<property name="formView"><value>/admin/provider/providerAttributeTypeForm</value></property>
+		<property name="successView"><value>providerAttributeType.list</value></property>
+	</bean>	
 	<!-- ** /Visit Attribute Type ** -->
 	
 	<!-- ======================================== -->
