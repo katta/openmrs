@@ -425,4 +425,16 @@ public class PrivilegeConstants {
 	
 	@AddOnStartup(description = "Able to view the 'Visits' tab on the patient dashboard")
 	public static final String DASHBOARD_VISISTS = "Patient Dashboard - View Visits Section";
+	
+	@AddOnStartup(description = "Able to view Provider")
+	public static final String VIEW_PROVIDER = "View Provider";
+	
+	@AddOnStartup(description = "Able to edit Provider")
+	public static final String EDIT_PROVIDER = "Edit Provider";
+	
+	@AddOnStartup(description = "Able to add Provider")
+	public static final String ADD_PROVIDER = "Add Provider";
+	
+	@AddOnStartup(description = "Able to delete provider")
+	public static final String PURGE_PROVIDER = "Purge Provider";
 }

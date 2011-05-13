@@ -98,7 +98,8 @@ public class HibernateProviderDAO implements ProviderDAO {
 			criteria.setFirstResult(start);
 		if (length != null)
 			criteria.setMaxResults(length);
-		return criteria.list();
+		List list = criteria.list();
+		return list;
 	}
 	
 	/**
@@ -109,10 +110,13 @@ public class HibernateProviderDAO implements ProviderDAO {
 	 * @return Criteria
 	 */
 	private Criteria prepareProviderCriteria(String name, String identifier) {
-		Criteria criteria = getSession().createCriteria(Provider.class);
+		
+		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Provider.class).createAlias("person", "p",
+		    Criteria.LEFT_JOIN);
+		
 		criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		if (name != null) {
-			criteria.createCriteria("person", "p").createAlias("names", "personName");
+			criteria.createAlias("p.names", "personName", Criteria.LEFT_JOIN);
 			criteria.add(getNameSearchExpression(name));
 		} else if (identifier != null) {
 			criteria.add(Expression.ilike("identifier", identifier, MatchMode.START));

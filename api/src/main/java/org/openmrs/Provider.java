@@ -14,6 +14,7 @@
 package org.openmrs;
 
 import org.apache.commons.lang.NotImplementedException;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * Represents a person who may provide care to a patient during an encounter
@@ -100,6 +101,6 @@ public class Provider extends BaseOpenmrsMetadata {
 	 * @return boolean
 	 */
 	public boolean isValid() {
-		return getName() != null ? getPerson() == null : getPerson() != null;
+		return StringUtils.isEmpty(getName()) ? getPerson() != null : getPerson() == null;
 	}
 }

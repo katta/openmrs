@@ -19,7 +19,9 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import junit.framework.Assert;
 
@@ -186,7 +188,10 @@ public class ProviderServiceTest extends BaseContextSensitiveTest {
 	@Test
 	@Verifies(value = "should fetch provider with given name with case in sensitive", method = "getProvider(String)")
 	public void getProvider_shouldFetchProviderWithGivenNameWithCaseInSensitive() throws Exception {
-		assertEquals(2, service.getProvider("RON").size());
+		Provider provider = new Provider();
+		provider.setName("Voldemort");
+		service.saveProvider(provider);
+		assertEquals(1, service.getProvider("VOLD").size());
 	}
 	
 	@Test
@@ -244,7 +249,15 @@ public class ProviderServiceTest extends BaseContextSensitiveTest {
 	public void getCountOfProvider_shouldFetchNumberOfProviderMatchingGivenQueryWithProviderPersonName() {
 		assertEquals(1, service.getCountOfProviders("Hippo").intValue());
 		Person person = Context.getPersonService().getPerson(502);
-		person.addName(new PersonName("Hippot", "A", "B"));
+		Set names = person.getNames();
+		for (Iterator iterator = names.iterator(); iterator.hasNext();) {
+			PersonName name = (PersonName) iterator.next();
+			name.setVoided(true);
+			
+		}
+		PersonName personName = new PersonName("Hippot", "A", "B");
+		personName.setPreferred(true);
+		person.addName(personName);
 		Context.getPersonService().savePerson(person);
 		assertEquals(1, service.getCountOfProviders("Hippo").intValue());
 	}
