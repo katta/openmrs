@@ -59,194 +59,52 @@ public class ProviderServiceTest extends BaseContextSensitiveTest {
 		executeDataSet(PROVIDER_ATTRIBUTE_TYPES_XML);
 	}
 	
+	/**
+	 * @see ProviderService#getAllProviderAttributeTypes(Boolean)
+	 * @verifies get all provider attribute types excluding retired
+	 */
 	@Test
-	@Verifies(value = "should get all providers", method = "getAllProviders()")
-	public void getAllProviders_shouldGetAllProviders() {
+	public void getAllProviderAttributeTypes_shouldGetAllProviderAttributeTypesExcludingRetired() throws Exception {
+		List<ProviderAttributeType> types = service.getAllProviderAttributeTypes(false);
+		assertEquals(1, types.size());
+	}
+	
+	/**
+	 * @see ProviderService#getAllProviderAttributeTypes(Boolean)
+	 * @verifies get all provider attribute types including retired
+	 */
+	@Test
+	public void getAllProviderAttributeTypes_shouldGetAllProviderAttributeTypesIncludingRetired() throws Exception {
+		List<ProviderAttributeType> types = service.getAllProviderAttributeTypes();
+		assertEquals(2, types.size());
+	}
+	
+	/**
+	 * @see ProviderService#getAllProviders()
+	 * @verifies get all providers
+	 */
+	@Test
+	public void getAllProviders_shouldGetAllProviders() throws Exception {
 		List<Provider> providers = service.getAllProviders();
 		assertEquals(8, providers.size());
 	}
 	
+	/**
+	 * @see ProviderService#getAllProviders(boolean)
+	 * @verifies get all providers that are unretired
+	 */
 	@Test
-	@Verifies(value = "should get all providers that are unretired", method = "getAllProviders(boolean includeRetire)")
-	public void getAllUnRetiredProviders_shouldGetAllUnRetiredProviders() {
+	public void getAllProviders_shouldGetAllProvidersThatAreUnretired() throws Exception {
 		List<Provider> providers = service.getAllProviders(false);
 		assertEquals(7, providers.size());
 	}
 	
+	/**
+	 * @see ProviderService#getCountOfProviders(String)
+	 * @verifies fetch number of provider matching given query.
+	 */
 	@Test
-	@Verifies(value = "should save a  Provider with provider name alone", method = "saveProvider(Provider provider)")
-	public void should_saveProviderWithNameAlone() throws Exception {
-		Provider provider = new Provider();
-		provider.setName("Provider9");
-		service.saveProvider(provider);
-		Assert.assertNotNull(provider.getId());
-		Assert.assertNotNull(provider.getUuid());
-		Assert.assertNotNull(provider.getCreator());
-		Assert.assertNotNull(provider.getDateCreated());
-		Assert.assertEquals("Provider9", provider.getName());
-	}
-	
-	@Test
-	@Verifies(value = "should save a  Provider with Person alone", method = "saveProvider(Provider provider)")
-	public void should_saveProviderWithPersonAlone() throws Exception {
-		Provider provider = new Provider();
-		Person person = Context.getPersonService().getPerson(new Integer(999));
-		provider.setPerson(person);
-		service.saveProvider(provider);
-		Assert.assertNotNull(provider.getId());
-		Assert.assertNotNull(provider.getUuid());
-		Assert.assertNotNull(provider.getCreator());
-		Assert.assertNotNull(provider.getDateCreated());
-		Assert.assertEquals(999, provider.getPerson().getId().intValue());
-	}
-	
-	@Test
-	@Verifies(value = "should not save a  Provider with both name and person", method = "saveProvider(Provider provider)")
-	@ExpectedException(Exception.class)
-	public void should_notSaveProviderWithNameAndPerson() throws Exception {
-		Provider provider = new Provider();
-		provider.setName("Provider9");
-		Person person = Context.getPersonService().getPerson(new Integer(999));
-		provider.setPerson(person);
-		service.saveProvider(provider);
-	}
-	
-	@Test
-	@Verifies(value = "should not save a  Provider with both name and person being  null", method = "saveProvider(Provider provider)")
-	@ExpectedException(Exception.class)
-	public void should_notSaveProviderWithNameAndPersonBothNull() throws Exception {
-		Provider provider = new Provider();
-		service.saveProvider(provider);
-	}
-	
-	@Test
-	@Verifies(value = "should retire a  Provider", method = "retireProvider(Provider provider, String reason)")
-	public void should_retireProvider() {
-		Provider provider = service.getProvider(1);
-		assertFalse(provider.isRetired());
-		assertNull(provider.getRetireReason());
-		service.retireProvider(provider, "retire reason");
-		assertTrue(provider.isRetired());
-		assertEquals("retire reason", provider.getRetireReason());
-		assertEquals(6, service.getAllProviders(false).size());
-		
-	}
-	
-	@Test
-	@Verifies(value = "should unretire a  Provider", method = "unretireProvider(Provider provider)")
-	public void should_unretireProvider() {
-		Provider provider = service.getProvider(1);
-		service.unretireProvider(provider);
-		assertFalse(provider.isRetired());
-		assertNull(provider.getRetireReason());
-	}
-	
-	@Test
-	@Verifies(value = "should delete a  provider", method = "purgeProvider(Provider provider)")
-	public void should_purgeProvider() {
-		Provider provider = service.getProvider(1);
-		service.purgeProvider(provider);
-		assertEquals(7, Context.getProviderService().getAllProviders().size());
-	}
-	
-	@Test
-	@Verifies(value = "should get provider given ID", method = "getProvider(Integer id)")
-	public void should_getProvider() {
-		Provider provider = service.getProvider(1);
-		assertEquals("RobertClive", provider.getName());
-		assertEquals("a2c3868a-6b90-11e0-93c3-18a905e044dc", provider.getUuid());
-	}
-	
-	@Test
-	@Verifies(value = "should get provider given Uuid", method = "getProvider(String uuid)")
-	public void should_getProviderByUuid() {
-		Provider provider = service.getProviderbyUuid("a2c3868a-6b90-11e0-93c3-18a905e044dc");
-		Assert.assertNotNull(provider);
-		assertEquals("RobertClive", provider.getName());
-	}
-	
-	@Test
-	@Verifies(value = "should force search string to be greater than minsearchcharacters global property", method = "getProvider(String)")
-	public void getPatients_shouldForceSearchStringToBeGreaterThanMinsearchcharactersGlobalProperty() throws Exception {
-		// make sure we can get patients with the default of 3
-		assertEquals(2, service.getProvider("Ron").size());
-		
-		Context.clearSession();
-		Context.getAdministrationService().saveGlobalProperty(
-		    new GlobalProperty(OpenmrsConstants.GLOBAL_PROPERTY_MIN_SEARCH_CHARACTERS, "4"));
-		
-		assertEquals(0, service.getProvider("Ron").size());
-		assertEquals(2, service.getProvider("Rona").size());
-	}
-	
-	@Test
-	@Verifies(value = "should fetch provider with given identifier with case in sensitive", method = "getProvider(String)")
-	public void getProvider_shouldFetchProviderWithGivenIdentifierWithCaseInSensitive() throws Exception {
-		assertEquals(2, service.getProvider("8c7").size());
-	}
-	
-	@Test
-	@Verifies(value = "should fetch provider with given name with case in sensitive", method = "getProvider(String)")
-	public void getProvider_shouldFetchProviderWithGivenNameWithCaseInSensitive() throws Exception {
-		Provider provider = new Provider();
-		provider.setName("Voldemort");
-		service.saveProvider(provider);
-		assertEquals(1, service.getProvider("VOLD").size());
-	}
-	
-	@Test
-	@Verifies(value = "should not fail when minimum search characters is null", method = "getProvider(String)")
-	public void getProvider_shouldNotFailWhenMinimumSearchCharactersIsNull() throws Exception {
-		Context.clearSession();
-		Context.getAdministrationService().saveGlobalProperty(
-		    new GlobalProperty(OpenmrsConstants.GLOBAL_PROPERTY_MIN_SEARCH_CHARACTERS, null));
-		assertEquals(2, service.getProvider("RON").size());
-	}
-	
-	@Test
-	@Verifies(value = "not fail when minimum search characters is invalid integer", method = "getProvider(String)")
-	public void getProvider_shouldNotFailWhenMinimumSearchCharactersIsInvalid() throws Exception {
-		Context.clearSession();
-		Context.getAdministrationService().saveGlobalProperty(
-		    new GlobalProperty(OpenmrsConstants.GLOBAL_PROPERTY_MIN_SEARCH_CHARACTERS, "A"));
-		assertEquals(1, service.getProvider("ROg").size());
-	}
-	
-	@Test
-	@Verifies(value = "should fetch provider by matching query string with any unVoided PersonName's Given Name ", method = "getProvider(String)")
-	public void getProvider_shouldFetchProviderByMatchingQueryStringWithAnyUnVoidedPersonNamesGivenName() throws Exception {
-		assertEquals(1, service.getProvider("COL").size());
-	}
-	
-	@Test
-	@Verifies(value = "should fetch provider by matching query string with any unVoided PersonName's middleName", method = "getProvider(String)")
-	public void getProvider_shouldFetchProviderByMatchingQueryStringWithAnyUnVoidedPersonNamesMiddleName() throws Exception {
-		assertEquals(4, service.getProvider("Tes").size());
-	}
-	
-	@Test
-	@Verifies(value = "should fetch provider by matching query string with any unVoided Person's familyName", method = "getProvider(String)")
-	public void getProvider_shouldFetchProviderByMatchingQueryStringWithAnyUnVoidedPersonNamesFamilyName() throws Exception {
-		assertEquals(2, service.getProvider("Che").size());
-	}
-	
-	@Test
-	@Ignore
-	@Verifies(value = "should fetch provider by matching query string with any unVoided Person's familyName2", method = "getProvider(String)")
-	public void getProvider_shouldFetchProviderByMatchingQueryStringWithAnyUnVoidedPersonNamesFamilyName2() throws Exception {
-		assertEquals(1, service.getProvider("ric").size());
-	}
-	
-	@Test
-	@Verifies(value = "should not fetch provider if the query string matches with any voided Person name for that provider", method = "getProvider(String)")
-	public void getProvider_shouldNotFetchProviderIfQueryStringMatchesWithAnyVoidedPersonName() throws Exception {
-		assertEquals(0, service.getProvider("Hit").size());
-		assertEquals(1, service.getProvider("coll").size());
-	}
-	
-	@Test
-	@Verifies(value = "should fetch number of provider matching given query with provider person Name", method = "getCountOfProvider(String query)")
-	public void getCountOfProvider_shouldFetchNumberOfProviderMatchingGivenQueryWithProviderPersonName() {
+	public void getCountOfProviders_shouldFetchNumberOfProviderMatchingGivenQuery() throws Exception {
 		assertEquals(1, service.getCountOfProviders("Hippo").intValue());
 		Person person = Context.getPersonService().getPerson(502);
 		Set names = person.getNames();
@@ -263,6 +121,34 @@ public class ProviderServiceTest extends BaseContextSensitiveTest {
 	}
 	
 	/**
+	 * @see ProviderService#getProvider(Integer)
+	 * @verifies get provider given ID
+	 */
+	@Test
+	public void getProvider_shouldGetProviderGivenID() throws Exception {
+		Provider provider = service.getProvider(1);
+		assertEquals("RobertClive", provider.getName());
+		assertEquals("a2c3868a-6b90-11e0-93c3-18a905e044dc", provider.getUuid());
+	}
+	
+	/**
+	 * @see ProviderService#getProvider(String)
+	 * @verifies should force search string to be greater than
+	 *           minsearchcharacters global property
+	 */
+	@Test
+	public void getProvider_shouldShouldForceSearchStringToBeGreaterThanMinsearchcharactersGlobalProperty() throws Exception {
+		assertEquals(2, service.getProvider("Ron").size());
+		
+		Context.clearSession();
+		Context.getAdministrationService().saveGlobalProperty(
+		    new GlobalProperty(OpenmrsConstants.GLOBAL_PROPERTY_MIN_SEARCH_CHARACTERS, "4"));
+		
+		assertEquals(0, service.getProvider("Ron").size());
+		assertEquals(2, service.getProvider("Rona").size());
+	}
+	
+	/**
 	 * @see ProviderService#getProviderAttributeType(Integer)
 	 * @verifies get provider attribute type for the given id
 	 */
@@ -271,6 +157,141 @@ public class ProviderServiceTest extends BaseContextSensitiveTest {
 		ProviderAttributeType providerAttributeType = service.getProviderAttributeType(1);
 		assertEquals("Audit Date", providerAttributeType.getName());
 		assertEquals("9516cc50-6f9f-11e0-8414-001e378eb67e", providerAttributeType.getUuid());
+	}
+	
+	/**
+	 * @see ProviderService#getProviderAttributeTypeByUuid(String)
+	 * @verifies get the provider attribute type by it's uuid
+	 */
+	@Test
+	public void getProviderAttributeTypeByUuid_shouldGetTheProviderAttributeTypeByItsUuid() throws Exception {
+		ProviderAttributeType providerAttributeType = service
+		        .getProviderAttributeTypeByUuid("9516cc50-6f9f-11e0-8414-001e378eb67e");
+		assertEquals("Audit Date", providerAttributeType.getName());
+	}
+	
+	/**
+	 * @see ProviderService#getProviderbyUuid(String)
+	 * @verifies get provider given Uuid
+	 */
+	@Test
+	public void getProviderbyUuid_shouldGetProviderGivenUuid() throws Exception {
+		Provider provider = service.getProviderbyUuid("a2c3868a-6b90-11e0-93c3-18a905e044dc");
+		Assert.assertNotNull(provider);
+		assertEquals("RobertClive", provider.getName());
+	}
+	
+	/**
+	 * @see ProviderService#getProviders(String,Integer,Integer)
+	 * @verifies force search string to be greater than minsearchcharacters
+	 *           global property
+	 */
+	@Test
+	public void getProviders_shouldForceSearchStringToBeGreaterThanMinsearchcharactersGlobalProperty() throws Exception {
+		assertEquals(2, service.getProvider("Ron").size());
+		Context.clearSession();
+		Context.getAdministrationService().saveGlobalProperty(
+		    new GlobalProperty(OpenmrsConstants.GLOBAL_PROPERTY_MIN_SEARCH_CHARACTERS, "4"));
+		
+		assertEquals(0, service.getProvider("Ron").size());
+		assertEquals(2, service.getProvider("Rona").size());
+	}
+	
+	/**
+	 * @see ProviderService#getProviders(String,Integer,Integer)
+	 * @verifies fetch provider with given identifier with case in sensitive
+	 */
+	@Test
+	public void getProviders_shouldFetchProviderWithGivenIdentifierWithCaseInSensitive() throws Exception {
+		assertEquals(2, service.getProvider("8c7").size());
+	}
+	
+	/**
+	 * @see ProviderService#getProviders(String,Integer,Integer)
+	 * @verifies fetch provider with given name with case in sensitive
+	 */
+	@Test
+	public void getProviders_shouldFetchProviderWithGivenNameWithCaseInSensitive() throws Exception {
+		Provider provider = new Provider();
+		provider.setName("Catherin");
+		service.saveProvider(provider);
+		assertEquals(1, service.getProvider("Cath").size());
+	}
+	
+	/**
+	 * @see ProviderService#getProviders(String,Integer,Integer)
+	 * @verifies not fail when minimum search characters is null
+	 */
+	@Test
+	public void getProviders_shouldNotFailWhenMinimumSearchCharactersIsNull() throws Exception {
+		Context.clearSession();
+		Context.getAdministrationService().saveGlobalProperty(
+		    new GlobalProperty(OpenmrsConstants.GLOBAL_PROPERTY_MIN_SEARCH_CHARACTERS, null));
+		assertEquals(2, service.getProvider("RON").size());
+	}
+	
+	/**
+	 * @see ProviderService#getProviders(String,Integer,Integer)
+	 * @verifies not fail when minimum search characters is invalid integer
+	 */
+	@Test
+	public void getProviders_shouldNotFailWhenMinimumSearchCharactersIsInvalidInteger() throws Exception {
+		Context.clearSession();
+		Context.getAdministrationService().saveGlobalProperty(
+		    new GlobalProperty(OpenmrsConstants.GLOBAL_PROPERTY_MIN_SEARCH_CHARACTERS, "A"));
+		assertEquals(1, service.getProvider("ROg").size());
+	}
+	
+	/**
+	 * @see ProviderService#getProviders(String,Integer,Integer)
+	 * @verifies fetch provider by matching query string with any unVoided
+	 *           PersonName's Given Name
+	 */
+	@Test
+	public void getProviders_shouldFetchProviderByMatchingQueryStringWithAnyUnVoidedPersonNamesGivenName() throws Exception {
+		assertEquals(1, service.getProvider("COL").size());
+	}
+	
+	/**
+	 * @see ProviderService#getProviders(String,Integer,Integer)
+	 * @verifies fetch provider by matching query string with any unVoided
+	 *           PersonName's middleName
+	 */
+	@Test
+	public void getProviders_shouldFetchProviderByMatchingQueryStringWithAnyUnVoidedPersonNamesMiddleName() throws Exception {
+		assertEquals(4, service.getProvider("Tes").size());
+	}
+	
+	/**
+	 * @see ProviderService#getProviders(String,Integer,Integer)
+	 * @verifies fetch provider by matching query string with any unVoided
+	 *           Person's familyName
+	 */
+	@Test
+	public void getProviders_shouldFetchProviderByMatchingQueryStringWithAnyUnVoidedPersonsFamilyName() throws Exception {
+		assertEquals(2, service.getProvider("Che").size());
+	}
+	
+	/**
+	 * @see ProviderService#getProviders(String,Integer,Integer)
+	 * @verifies not fetch provider if the query string matches with any voided
+	 *           Person name for that
+	 */
+	@Test
+	public void getProviders_shouldNotFetchProviderIfTheQueryStringMatchesWithAnyVoidedPersonNameForThat() throws Exception {
+		assertEquals(0, service.getProvider("Hit").size());
+		assertEquals(1, service.getProvider("coll").size());
+	}
+	
+	/**
+	 * @see ProviderService#purgeProvider(Provider)
+	 * @verifies delete a provider
+	 */
+	@Test
+	public void purgeProvider_shouldDeleteAProvider() throws Exception {
+		Provider provider = service.getProvider(1);
+		service.purgeProvider(provider);
+		assertEquals(7, Context.getProviderService().getAllProviders().size());
 	}
 	
 	/**
@@ -283,6 +304,21 @@ public class ProviderServiceTest extends BaseContextSensitiveTest {
 		ProviderAttributeType providerAttributeType = service.getProviderAttributeType(1);
 		service.purgeProviderAttributeType(providerAttributeType);
 		assertEquals(size - 1, service.getAllProviderAttributeTypes().size());
+	}
+	
+	/**
+	 * @see ProviderService#retireProvider(Provider,String)
+	 * @verifies retire a provider
+	 */
+	@Test
+	public void retireProvider_shouldRetireAProvider() throws Exception {
+		Provider provider = service.getProvider(1);
+		assertFalse(provider.isRetired());
+		assertNull(provider.getRetireReason());
+		service.retireProvider(provider, "retire reason");
+		assertTrue(provider.isRetired());
+		assertEquals("retire reason", provider.getRetireReason());
+		assertEquals(6, service.getAllProviders(false).size());
 	}
 	
 	/**
@@ -301,6 +337,65 @@ public class ProviderServiceTest extends BaseContextSensitiveTest {
 	}
 	
 	/**
+	 * @see ProviderService#saveProvider(Provider)
+	 * @verifies save a Provider with provider name alone
+	 */
+	@Test
+	public void saveProvider_shouldSaveAProviderWithProviderNameAlone() throws Exception {
+		Provider provider = new Provider();
+		provider.setName("Provider9");
+		service.saveProvider(provider);
+		Assert.assertNotNull(provider.getId());
+		Assert.assertNotNull(provider.getUuid());
+		Assert.assertNotNull(provider.getCreator());
+		Assert.assertNotNull(provider.getDateCreated());
+		Assert.assertEquals("Provider9", provider.getName());
+	}
+	
+	/**
+	 * @see ProviderService#saveProvider(Provider)
+	 * @verifies save a Provider with Person alone
+	 */
+	@Test
+	public void saveProvider_shouldSaveAProviderWithPersonAlone() throws Exception {
+		Provider provider = new Provider();
+		Person person = Context.getPersonService().getPerson(new Integer(999));
+		provider.setPerson(person);
+		service.saveProvider(provider);
+		Assert.assertNotNull(provider.getId());
+		Assert.assertNotNull(provider.getUuid());
+		Assert.assertNotNull(provider.getCreator());
+		Assert.assertNotNull(provider.getDateCreated());
+		Assert.assertEquals(999, provider.getPerson().getId().intValue());
+		
+	}
+	
+	/**
+	 * @see ProviderService#saveProvider(Provider)
+	 * @verifies not save a Provider with both name and person
+	 */
+	@Test
+	@ExpectedException(Exception.class)
+	public void saveProvider_shouldNotSaveAProviderWithBothNameAndPerson() throws Exception {
+		Provider provider = new Provider();
+		provider.setName("Provider9");
+		Person person = Context.getPersonService().getPerson(new Integer(999));
+		provider.setPerson(person);
+		service.saveProvider(provider);
+	}
+	
+	/**
+	 * @see ProviderService#saveProvider(Provider)
+	 * @verifies not save a Provider with both name and person being null
+	 */
+	@Test
+	@ExpectedException(Exception.class)
+	public void saveProvider_shouldNotSaveAProviderWithBothNameAndPersonBeingNull() throws Exception {
+		Provider provider = new Provider();
+		service.saveProvider(provider);
+	}
+	
+	/**
 	 * @see ProviderService#saveProviderAttributeType(ProviderAttributeType)
 	 * @verifies save the provider attribute type
 	 */
@@ -316,6 +411,18 @@ public class ProviderServiceTest extends BaseContextSensitiveTest {
 	}
 	
 	/**
+	 * @see ProviderService#unretireProvider(Provider)
+	 * @verifies unretire a provider
+	 */
+	@Test
+	public void unretireProvider_shouldUnretireAProvider() throws Exception {
+		Provider provider = service.getProvider(1);
+		service.unretireProvider(provider);
+		assertFalse(provider.isRetired());
+		assertNull(provider.getRetireReason());
+	}
+	
+	/**
 	 * @see ProviderService#unretireProviderAttributeType(ProviderAttributeType)
 	 * @verifies unretire a provider attribute type
 	 */
@@ -325,37 +432,6 @@ public class ProviderServiceTest extends BaseContextSensitiveTest {
 		service.unretireProviderAttributeType(providerAttributeType);
 		assertFalse(providerAttributeType.isRetired());
 		assertNull(providerAttributeType.getRetireReason());
-	}
-	
-	/**
-	 * @see ProviderService#getProviderAttributeTypeByUuid(String)
-	 * @verifies get the provider attribute type by it's uuid
-	 */
-	@Test
-	public void getProviderAttributeTypeByUuid_shouldGetTheProviderAttributeTypeByItsUuid() throws Exception {
-		ProviderAttributeType providerAttributeType = service
-		        .getProviderAttributeTypeByUuid("9516cc50-6f9f-11e0-8414-001e378eb67e");
-		assertEquals("Audit Date", providerAttributeType.getName());
-	}
-	
-	/**
-	 * @see ProviderService#getAllProviderAttributeTypes()
-	 * @verifies get all provider attribute types including retired
-	 */
-	@Test
-	public void getAllProviderAttributeTypes_shouldGetAllProviderAttributeTypesIncludingRetired() throws Exception {
-		List<ProviderAttributeType> types = service.getAllProviderAttributeTypes();
-		assertEquals(2, types.size());
-	}
-	
-	/**
-	 * @see ProviderService#getAllProviderAttributeTypes(Boolean)
-	 * @verifies get all provider attribute types excluding retired
-	 */
-	@Test
-	public void getAllProviderAttributeTypes_shouldGetAllProviderAttributeTypesExcludingRetired() throws Exception {
-		List<ProviderAttributeType> types = service.getAllProviderAttributeTypes(false);
-		assertEquals(1, types.size());
 	}
 	
 }
