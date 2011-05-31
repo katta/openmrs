@@ -13,6 +13,7 @@
  */
 package org.openmrs.api.impl;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
 
@@ -21,6 +22,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Provider;
 import org.openmrs.ProviderAttributeType;
+import org.openmrs.api.APIException;
 import org.openmrs.api.ProviderService;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.db.ProviderDAO;
@@ -97,11 +99,11 @@ public class ProviderServiceImpl extends BaseOpenmrsService implements ProviderS
 	 * @see org.openmrs.api.ProviderService#saveProvider(org.openmrs.Provider)
 	 */
 	@Override
-	public Provider saveProvider(Provider provider) throws Exception {
+	public Provider saveProvider(Provider provider) {
 		if (provider.isValid())
 			return dao.saveProvider(provider);
 		else
-			throw new Exception("Provider Name or Person Required");
+			throw new APIException("Provider Name or Person Required");
 		
 	}
 	
@@ -118,8 +120,6 @@ public class ProviderServiceImpl extends BaseOpenmrsService implements ProviderS
 	 */
 	@Override
 	public Integer getCountOfProviders(String query) {
-		
-		List<Provider> provider = new Vector<Provider>();
 		if (StringUtils.isBlank(query) || query.length() < getMinSearchCharacters())
 			return 0;
 		
@@ -139,10 +139,8 @@ public class ProviderServiceImpl extends BaseOpenmrsService implements ProviderS
 	 */
 	@Override
 	public List<Provider> getProviders(String query, Integer start, Integer length) {
-		
-		List<Provider> provider = new Vector<Provider>();
 		if (StringUtils.isBlank(query) || query.length() < getMinSearchCharacters())
-			return provider;
+			return Collections.emptyList();
 		
 		// if there is a number in the query string
 		if (query.matches(".*\\d+.*")) {
@@ -153,14 +151,6 @@ public class ProviderServiceImpl extends BaseOpenmrsService implements ProviderS
 			return dao.getProviders(query, null, start, length);
 		}
 		
-	}
-	
-	/**
-	 * @see org.openmrs.api.ProviderService#getProvider(java.lang.String)
-	 */
-	@Override
-	public List<Provider> getProvider(String query) {
-		return getProviders(query, 0, null);
 	}
 	
 	/**

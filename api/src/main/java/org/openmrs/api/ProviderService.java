@@ -93,14 +93,13 @@ public interface ProviderService extends OpenmrsService {
 	/**
 	 * @param provider
 	 * @return the Provider object after saving it in the database
-	 * @throws Exception
 	 * @should save a Provider with provider name alone
 	 * @should save a Provider with Person alone
 	 * @should not save a Provider with both name and person
 	 * @should not save a Provider with both name and person being null
 	 */
 	@Authorized( { PrivilegeConstants.ADD_PROVIDER, PrivilegeConstants.EDIT_PROVIDER })
-	public Provider saveProvider(Provider provider) throws Exception;
+	public Provider saveProvider(Provider provider);
 	
 	/**
 	 * @param string
@@ -110,15 +109,6 @@ public interface ProviderService extends OpenmrsService {
 	@Transactional(readOnly = true)
 	@Authorized( { PrivilegeConstants.VIEW_PROVIDER })
 	public Provider getProviderbyUuid(String uuid);
-	
-	/**
-	 * @param string
-	 * @return list of Provider object matching the string
-	 * @should should force search string to be greater than minsearchcharacters global property
-	 */
-	@Transactional(readOnly = true)
-	@Authorized( { PrivilegeConstants.VIEW_PROVIDER })
-	public List<Provider> getProvider(String query);
 	
 	/**
 	 * @param query

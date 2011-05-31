@@ -132,23 +132,6 @@ public class ProviderServiceTest extends BaseContextSensitiveTest {
 	}
 	
 	/**
-	 * @see ProviderService#getProvider(String)
-	 * @verifies should force search string to be greater than
-	 *           minsearchcharacters global property
-	 */
-	@Test
-	public void getProvider_shouldShouldForceSearchStringToBeGreaterThanMinsearchcharactersGlobalProperty() throws Exception {
-		assertEquals(2, service.getProvider("Ron").size());
-		
-		Context.clearSession();
-		Context.getAdministrationService().saveGlobalProperty(
-		    new GlobalProperty(OpenmrsConstants.GLOBAL_PROPERTY_MIN_SEARCH_CHARACTERS, "4"));
-		
-		assertEquals(0, service.getProvider("Ron").size());
-		assertEquals(2, service.getProvider("Rona").size());
-	}
-	
-	/**
 	 * @see ProviderService#getProviderAttributeType(Integer)
 	 * @verifies get provider attribute type for the given id
 	 */
@@ -188,13 +171,13 @@ public class ProviderServiceTest extends BaseContextSensitiveTest {
 	 */
 	@Test
 	public void getProviders_shouldForceSearchStringToBeGreaterThanMinsearchcharactersGlobalProperty() throws Exception {
-		assertEquals(2, service.getProvider("Ron").size());
+		assertEquals(2, service.getProviders("Ron", 0, null).size());
 		Context.clearSession();
 		Context.getAdministrationService().saveGlobalProperty(
 		    new GlobalProperty(OpenmrsConstants.GLOBAL_PROPERTY_MIN_SEARCH_CHARACTERS, "4"));
 		
-		assertEquals(0, service.getProvider("Ron").size());
-		assertEquals(2, service.getProvider("Rona").size());
+		assertEquals(0, service.getProviders("Ron", 0, null).size());
+		assertEquals(2, service.getProviders("Rona", 0, null).size());
 	}
 	
 	/**
@@ -203,7 +186,7 @@ public class ProviderServiceTest extends BaseContextSensitiveTest {
 	 */
 	@Test
 	public void getProviders_shouldFetchProviderWithGivenIdentifierWithCaseInSensitive() throws Exception {
-		assertEquals(2, service.getProvider("8c7").size());
+		assertEquals(2, service.getProviders("8c7", 0, null).size());
 	}
 	
 	/**
@@ -215,7 +198,7 @@ public class ProviderServiceTest extends BaseContextSensitiveTest {
 		Provider provider = new Provider();
 		provider.setName("Catherin");
 		service.saveProvider(provider);
-		assertEquals(1, service.getProvider("Cath").size());
+		assertEquals(1, service.getProviders("Cath", 0, null).size());
 	}
 	
 	/**
@@ -227,7 +210,7 @@ public class ProviderServiceTest extends BaseContextSensitiveTest {
 		Context.clearSession();
 		Context.getAdministrationService().saveGlobalProperty(
 		    new GlobalProperty(OpenmrsConstants.GLOBAL_PROPERTY_MIN_SEARCH_CHARACTERS, null));
-		assertEquals(2, service.getProvider("RON").size());
+		assertEquals(2, service.getProviders("RON", 0, null).size());
 	}
 	
 	/**
@@ -239,7 +222,7 @@ public class ProviderServiceTest extends BaseContextSensitiveTest {
 		Context.clearSession();
 		Context.getAdministrationService().saveGlobalProperty(
 		    new GlobalProperty(OpenmrsConstants.GLOBAL_PROPERTY_MIN_SEARCH_CHARACTERS, "A"));
-		assertEquals(1, service.getProvider("ROg").size());
+		assertEquals(1, service.getProviders("ROg", 0, null).size());
 	}
 	
 	/**
@@ -249,7 +232,7 @@ public class ProviderServiceTest extends BaseContextSensitiveTest {
 	 */
 	@Test
 	public void getProviders_shouldFetchProviderByMatchingQueryStringWithAnyUnVoidedPersonNamesGivenName() throws Exception {
-		assertEquals(1, service.getProvider("COL").size());
+		assertEquals(1, service.getProviders("COL", 0, null).size());
 	}
 	
 	/**
@@ -259,7 +242,7 @@ public class ProviderServiceTest extends BaseContextSensitiveTest {
 	 */
 	@Test
 	public void getProviders_shouldFetchProviderByMatchingQueryStringWithAnyUnVoidedPersonNamesMiddleName() throws Exception {
-		assertEquals(4, service.getProvider("Tes").size());
+		assertEquals(4, service.getProviders("Tes", 0, null).size());
 	}
 	
 	/**
@@ -269,7 +252,7 @@ public class ProviderServiceTest extends BaseContextSensitiveTest {
 	 */
 	@Test
 	public void getProviders_shouldFetchProviderByMatchingQueryStringWithAnyUnVoidedPersonsFamilyName() throws Exception {
-		assertEquals(2, service.getProvider("Che").size());
+		assertEquals(2, service.getProviders("Che", 0, null).size());
 	}
 	
 	/**
@@ -279,8 +262,8 @@ public class ProviderServiceTest extends BaseContextSensitiveTest {
 	 */
 	@Test
 	public void getProviders_shouldNotFetchProviderIfTheQueryStringMatchesWithAnyVoidedPersonNameForThat() throws Exception {
-		assertEquals(0, service.getProvider("Hit").size());
-		assertEquals(1, service.getProvider("coll").size());
+		assertEquals(0, service.getProviders("Hit", 0, null).size());
+		assertEquals(1, service.getProviders("coll", 0, null).size());
 	}
 	
 	/**
