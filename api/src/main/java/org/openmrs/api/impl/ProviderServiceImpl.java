@@ -15,7 +15,6 @@ package org.openmrs.api.impl;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Vector;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -185,7 +184,7 @@ public class ProviderServiceImpl extends BaseOpenmrsService implements ProviderS
 	 * @see org.openmrs.api.ProviderService#getAllProviderAttributeTypes(java.lang.Boolean)
 	 */
 	@Override
-	public List<ProviderAttributeType> getAllProviderAttributeTypes(Boolean includeRetired) {
+	public List<ProviderAttributeType> getAllProviderAttributeTypes(boolean includeRetired) {
 		return dao.getAllProviderAttributeTypes(includeRetired);
 	}
 	
@@ -226,7 +225,7 @@ public class ProviderServiceImpl extends BaseOpenmrsService implements ProviderS
 	 */
 	@Override
 	public ProviderAttributeType unretireProviderAttributeType(ProviderAttributeType providerAttributeType) {
-		return dao.saveProviderAttributeType(providerAttributeType);
+		return saveProviderAttributeType(providerAttributeType);
 	}
 	
 	/**

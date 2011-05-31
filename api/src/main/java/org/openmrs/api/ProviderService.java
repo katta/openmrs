@@ -80,7 +80,7 @@ public interface ProviderService extends OpenmrsService {
 	public void purgeProvider(Provider provider);
 	
 	/**
-	 * Gets a provider by it's provider id
+	 * Gets a provider by its provider id
 	 * 
 	 * @param providerId the provider id
 	 * @return the provider by it's id
@@ -144,14 +144,13 @@ public interface ProviderService extends OpenmrsService {
 	 * #getAllProviderAttributeTypes(boolean) method
 	 * 
 	 * @return a list of provider attribute type objects.
-	 * @should get all provider attribute types including retired
+	 * @should get all provider attribute types including retired by default
 	 */
 	@Transactional(readOnly = true)
 	public List<ProviderAttributeType> getAllProviderAttributeTypes();
 	
 	/**
-	 * Gets all provider attribute types including retired provider attribute types. This method delegates to the
-	 * #getAllProviderAttributeTypes(boolean) method
+	 * Gets all provider attribute types optionally including retired provider attribute types.
 	 *
 	 * @param includeRetired boolean value to indicate whether to include retired records or not
 	 * @return a list of provider attribute type objects.
@@ -159,7 +158,7 @@ public interface ProviderService extends OpenmrsService {
 	 * @should get all provider attribute types including retired
 	 */
 	@Transactional(readOnly = true)
-	public List<ProviderAttributeType> getAllProviderAttributeTypes(Boolean includeRetired);
+	public List<ProviderAttributeType> getAllProviderAttributeTypes(boolean includeRetired);
 	
 	/**
 	 * Gets a provider attribute type by it's id
@@ -174,7 +173,7 @@ public interface ProviderService extends OpenmrsService {
 	 * Get a provider attribute type by it's uuid
 	 * 
 	 * @param uuid the uuid of the provider attribute type
-	 * @return the provider attribute type for the given id
+	 * @return the provider attribute type for the given uuid
 	 * @should get the provider attribute type by it's uuid
 	 */
 	public ProviderAttributeType getProviderAttributeTypeByUuid(String uuid);

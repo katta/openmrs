@@ -26,7 +26,6 @@ import java.util.Set;
 import junit.framework.Assert;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.openmrs.GlobalProperty;
 import org.openmrs.Person;
@@ -35,7 +34,6 @@ import org.openmrs.Provider;
 import org.openmrs.ProviderAttributeType;
 import org.openmrs.api.context.Context;
 import org.openmrs.test.BaseContextSensitiveTest;
-import org.openmrs.test.Verifies;
 import org.openmrs.util.OpenmrsConstants;
 import org.springframework.test.annotation.ExpectedException;
 
@@ -60,7 +58,7 @@ public class ProviderServiceTest extends BaseContextSensitiveTest {
 	}
 	
 	/**
-	 * @see ProviderService#getAllProviderAttributeTypes(Boolean)
+	 * @see ProviderService#getAllProviderAttributeTypes(boolean)
 	 * @verifies get all provider attribute types excluding retired
 	 */
 	@Test
@@ -70,11 +68,21 @@ public class ProviderServiceTest extends BaseContextSensitiveTest {
 	}
 	
 	/**
-	 * @see ProviderService#getAllProviderAttributeTypes(Boolean)
+	 * @see ProviderService#getAllProviderAttributeTypes(boolean)
 	 * @verifies get all provider attribute types including retired
 	 */
 	@Test
 	public void getAllProviderAttributeTypes_shouldGetAllProviderAttributeTypesIncludingRetired() throws Exception {
+		List<ProviderAttributeType> types = service.getAllProviderAttributeTypes(true);
+		assertEquals(2, types.size());
+	}
+	
+	/**
+	 * @see ProviderService#getAllProviderAttributeTypes()
+	 * @verifies get all provider attribute types including retired by default
+	 */
+	@Test
+	public void getAllProviderAttributeTypes_shouldGetAllProviderAttributeTypesIncludingRetiredByDefault() throws Exception {
 		List<ProviderAttributeType> types = service.getAllProviderAttributeTypes();
 		assertEquals(2, types.size());
 	}
@@ -411,7 +419,8 @@ public class ProviderServiceTest extends BaseContextSensitiveTest {
 	 */
 	@Test
 	public void unretireProviderAttributeType_shouldUnretireAProviderAttributeType() throws Exception {
-		ProviderAttributeType providerAttributeType = service.getProviderAttributeType(1);
+		ProviderAttributeType providerAttributeType = service.getProviderAttributeType(2);
+		assertTrue(providerAttributeType.isRetired());
 		service.unretireProviderAttributeType(providerAttributeType);
 		assertFalse(providerAttributeType.isRetired());
 		assertNull(providerAttributeType.getRetireReason());
