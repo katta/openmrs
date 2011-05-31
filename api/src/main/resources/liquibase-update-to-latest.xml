@@ -4509,7 +4509,7 @@
 			</not>
 		</preConditions>
 		<comment>
-				
+			Create provider table
 		</comment>
 		<createTable tableName="provider">
 			<column name="provider_id" type="int" autoIncrement="true">
