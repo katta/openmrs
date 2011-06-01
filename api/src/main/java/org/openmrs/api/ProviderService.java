@@ -58,7 +58,7 @@ public interface ProviderService extends OpenmrsService {
 	 * @param String reason why the provider is retired
 	 * @should retire a provider
 	 */
-	@Authorized( { PrivilegeConstants.ADD_PROVIDER, PrivilegeConstants.EDIT_PROVIDER })
+	@Authorized( { PrivilegeConstants.EDIT_PROVIDER })
 	public void retireProvider(Provider provider, String reason);
 	
 	/**
@@ -67,7 +67,7 @@ public interface ProviderService extends OpenmrsService {
 	 * @param Provider provider to unretire
 	 * @should unretire a provider
 	 */
-	@Authorized( { PrivilegeConstants.ADD_PROVIDER, PrivilegeConstants.EDIT_PROVIDER })
+	@Authorized( { PrivilegeConstants.EDIT_PROVIDER })
 	public Provider unretireProvider(Provider provider);
 	
 	/**
