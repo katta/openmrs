@@ -28,8 +28,8 @@ import org.openmrs.api.context.Context;
 import org.openmrs.messagesource.MessageSourceService;
 
 /**
- * DWR Provider methods. The methods in here are used in the webapp to get data from the database via
- * javascript calls.
+ * DWR Provider methods. The methods in here are used in the webapp to get data from the database
+ * via javascript calls.
  * 
  * @see PatientService
  */
@@ -41,8 +41,9 @@ public class DWRProviderService {
 	public Vector<Object> findProvider(String phrase, boolean includeVoided, Integer start, Integer length) {
 		Vector<Object> providerListItem = new Vector<Object>();
 		List<Provider> providerList = Context.getProviderService().getProviders(phrase, start, length);
-		MessageSourceService mss = Context.getMessageSourceService();
+		
 		if (providerList.size() == 0) {
+			MessageSourceService mss = Context.getMessageSourceService();
 			providerListItem.add(mss.getMessage("Provider.noMatchesFound", new Object[] { phrase }, Context.getLocale()));
 		} else {
 			for (Provider p : providerList) {
@@ -54,7 +55,7 @@ public class DWRProviderService {
 	}
 	
 	public Map<String, Object> findProviderCountAndProvider(String phrase, boolean includeVoided, Integer start,
-	        Integer length) throws APIException {
+	                                                        Integer length) throws APIException {
 		Map<String, Object> providerMap = new HashMap<String, Object>();
 		Vector<Object> objectList = findProvider(phrase, includeVoided, start, length);
 		try {
