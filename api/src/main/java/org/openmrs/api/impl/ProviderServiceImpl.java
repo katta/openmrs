@@ -99,11 +99,7 @@ public class ProviderServiceImpl extends BaseOpenmrsService implements ProviderS
 	 */
 	@Override
 	public Provider saveProvider(Provider provider) {
-		if (provider.isValid())
-			return dao.saveProvider(provider);
-		else
-			throw new APIException("Provider Name or Person Required");
-		
+		return dao.saveProvider(provider);
 	}
 	
 	/**

@@ -362,31 +362,6 @@ public class ProviderServiceTest extends BaseContextSensitiveTest {
 	}
 	
 	/**
-	 * @see ProviderService#saveProvider(Provider)
-	 * @verifies not save a Provider with both name and person
-	 */
-	@Test
-	@ExpectedException(Exception.class)
-	public void saveProvider_shouldNotSaveAProviderWithBothNameAndPerson() throws Exception {
-		Provider provider = new Provider();
-		provider.setName("Provider9");
-		Person person = Context.getPersonService().getPerson(new Integer(999));
-		provider.setPerson(person);
-		service.saveProvider(provider);
-	}
-	
-	/**
-	 * @see ProviderService#saveProvider(Provider)
-	 * @verifies not save a Provider with both name and person being null
-	 */
-	@Test
-	@ExpectedException(Exception.class)
-	public void saveProvider_shouldNotSaveAProviderWithBothNameAndPersonBeingNull() throws Exception {
-		Provider provider = new Provider();
-		service.saveProvider(provider);
-	}
-	
-	/**
 	 * @see ProviderService#saveProviderAttributeType(ProviderAttributeType)
 	 * @verifies save the provider attribute type
 	 */

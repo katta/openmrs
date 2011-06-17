@@ -58,7 +58,7 @@ public class ProviderValidator implements Validator {
 	 *            Errors
 	 * @see org.springframework.validation.Validator#validate(java.lang.Object,
 	 *      org.springframework.validation.Errors)
-	 * @should fail if the patients for the visit and the encounter dont match
+	 * @should fail if provider is retired and the retired reason is not mentioned
 	 * @should fail if patient is not set
 	 */
 	public void validate(Object obj, Errors errors) throws APIException {
@@ -70,7 +70,7 @@ public class ProviderValidator implements Validator {
 		
 		Provider provider = (Provider) obj;
 		if (provider != null) {
-			if (!provider.isValid()) {
+			if (!(StringUtils.isEmpty(provider.getName()) ? provider.getPerson() != null : provider.getPerson() == null)) {
 				errors.rejectValue("person", "Provider.error.person.required");
 			}
 			if (provider.isRetired() && StringUtils.isEmpty(provider.getRetireReason())) {
