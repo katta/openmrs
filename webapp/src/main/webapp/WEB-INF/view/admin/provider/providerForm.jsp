@@ -147,9 +147,7 @@
 								value='<spring:message code="Provider.unretire"/>'></td>
 						</tr>
 					</c:if>		
-				
 				</table>
-				
 		</form>
 	</div>
 </c:if>
