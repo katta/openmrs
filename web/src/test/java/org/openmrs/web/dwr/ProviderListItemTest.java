@@ -80,5 +80,17 @@ public class ProviderListItemTest {
 		ProviderListItem providerListItem = new ProviderListItem(provider);
 		Assert.assertEquals("identifier", providerListItem.getIdentifier());
 	}
+
+	/**
+     * @see ProviderListItem#getProviderId()
+     * @verifies return the provider id
+     */
+    @Test
+    public void getProviderId_shouldReturnTheProviderId() throws Exception {
+    	provider.setProviderId(2);
+    	
+    	ProviderListItem providerListItem = new ProviderListItem(provider);
+    	Assert.assertEquals(new Integer(2), providerListItem.getProviderId());
+    }
 	
 }

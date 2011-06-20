@@ -30,6 +30,8 @@ public class ProviderListItem {
 	
 	private String displayName;
 	
+	private Integer providerId;
+	
 	public ProviderListItem(Provider provider) {
 		Person person = provider.getPerson();
 		if (person != null) {
@@ -38,6 +40,7 @@ public class ProviderListItem {
 			displayName = provider.getName();
 		}
 		identifier = provider.getIdentifier();
+		providerId = provider.getProviderId();
 	}
 	
 	/**
@@ -57,4 +60,13 @@ public class ProviderListItem {
 	public String getDisplayName() {
 		return displayName;
 	}
+
+	/**
+	 * 
+	 * @return the provider id
+	 * @should return the provider id 
+	 */
+	public Integer getProviderId() {
+	    return providerId;
+    }
 }
