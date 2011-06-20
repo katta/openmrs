@@ -88,12 +88,12 @@ public class HibernateProviderDAO implements ProviderDAO {
 	}
 	
 	/**
-	 * @see org.openmrs.api.db.ProviderDAO#getProviders(java.lang.String,java.lang.String,
-	 *      java.lang.Integer, java.lang.Integer)
+	 * @see org.openmrs.api.db.ProviderDAO#getProviders(java.lang.String,java.lang.Integer,
+	 *      java.lang.Integer)
 	 */
 	@Override
-	public List<Provider> getProviders(String name, String identifier, Integer start, Integer length) {
-		Criteria criteria = prepareProviderCriteria(name, identifier);
+	public List<Provider> getProviders(String name, Integer start, Integer length) {
+		Criteria criteria = prepareProviderCriteria(name);
 		if (start != null)
 			criteria.setFirstResult(start);
 		if (length != null)
@@ -103,13 +103,12 @@ public class HibernateProviderDAO implements ProviderDAO {
 	}
 	
 	/**
-	 * Creates a Provider Criteria based on name or identifier
+	 * Creates a Provider Criteria based on name
 	 * 
-	 * @param name
-	 * @param identifier
-	 * @return Criteria
+	 * @param name represents provider name
+	 * @return Criteria represents the hibernate criteria to search 
 	 */
-	private Criteria prepareProviderCriteria(String name, String identifier) {
+	private Criteria prepareProviderCriteria(String name) {
 		
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(Provider.class).createAlias("person", "p",
 		    Criteria.LEFT_JOIN);
@@ -118,8 +117,6 @@ public class HibernateProviderDAO implements ProviderDAO {
 		if (name != null) {
 			criteria.createAlias("p.names", "personName", Criteria.LEFT_JOIN);
 			criteria.add(getNameSearchExpression(name));
-		} else if (identifier != null) {
-			criteria.add(Expression.ilike("identifier", identifier, MatchMode.START));
 		}
 		return criteria;
 	}
@@ -145,11 +142,11 @@ public class HibernateProviderDAO implements ProviderDAO {
 	}
 	
 	/**
-	 * @see org.openmrs.api.db.ProviderDAO#getCountOfProviders(java.lang.String, java.lang.String)
+	 * @see org.openmrs.api.db.ProviderDAO#getCountOfProviders(java.lang.String)
 	 */
 	@Override
-	public Integer getCountOfProviders(String name, String identifier) {
-		Criteria criteria = prepareProviderCriteria(name, identifier);
+	public Integer getCountOfProviders(String name) {
+		Criteria criteria = prepareProviderCriteria(name);
 		criteria.setProjection(Projections.countDistinct("providerId"));
 		return (Integer) criteria.uniqueResult();
 	}

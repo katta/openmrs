@@ -1,6 +1,6 @@
 <%@ include file="/WEB-INF/template/include.jsp" %>
 
-<openmrs:require privilege="View Encounters" otherwise="/login.htm" redirect="/admin/provider/index.htm" />
+<openmrs:require privilege="View Providers" otherwise="/login.htm" redirect="/admin/provider/index.htm" />
 
 <%@ include file="/WEB-INF/template/header.jsp" %>
 <%@ include file="localHeader.jsp" %>
@@ -12,13 +12,12 @@
 
 <script type="text/javascript">
 	var lastSearch;
-	$j(document).ready(function() {
+	
+	$j(document).ready(
+	function() {
 		new OpenmrsSearch("findProvider", true, doProviderSearch, doSelectionHandler, 
-				[	{fieldName:"providerName", header:omsgs.providerName},
-					{fieldName:"identifier", header:omsgs.providerIdentifier},
-					{fieldName:"givenName", header:omsgs.givenName},
-					{fieldName:"middleName", header:omsgs.middleName},
-					{fieldName:"familyName", header:omsgs.familyName}
+				[	{fieldName:"displayName", header:omsgs.providerName},
+					{fieldName:"identifier", header:omsgs.providerIdentifier}
 				],
                 {
                     searchLabel: '<spring:message code="Provider.search" javaScriptEscape="true"/>',
@@ -36,6 +35,9 @@
 		lastSearch = text;
 		DWRProviderService.findProviderCountAndProvider(text,opts.includeVoided,opts.start, opts.length,resultHandler);
 	}
+
+
+	
 </script>
 
 <h2><spring:message code="Provider.title"/></h2>

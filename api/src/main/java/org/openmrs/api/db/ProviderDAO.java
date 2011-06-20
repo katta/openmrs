@@ -56,22 +56,20 @@ public interface ProviderDAO {
 	
 	/**
 	 * 
-	 * @param identifier
 	 * @param name
 	 * @param start
 	 * @param length
 	 * @return List of  Providers
 	 */
-	public List<Provider> getProviders(String name, String identifier, Integer start, Integer length);
+	public List<Provider> getProviders(String name, Integer start, Integer length);
 	
 	/**
 	 * 
 	 * 
 	 * @param name
-	 * @param identifier
 	 * @return Count of providers satisfying the given query
 	 */
-	public Integer getCountOfProviders(String name, String identifier);
+	public Integer getCountOfProviders(String name);
 	
 	/**
 	 * @see ProviderService#getAllProviderAttributeTypes(Boolean)

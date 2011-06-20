@@ -23,17 +23,20 @@ import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
 
 public class ProviderValidatorTest {
+	
 	private Provider provider;
+	
 	private Errors errors;
+	
 	private ProviderValidator providerValidator;
-
+	
 	@Before
 	public void setup() {
 		provider = new Provider();
 		errors = new BindException(provider, "provider");
 		providerValidator = new ProviderValidator();
 	}
-
+	
 	/**
 	 * @see ProviderValidator#validate(Object,Errors)
 	 * @verifies fail if patient is not set
@@ -41,43 +44,40 @@ public class ProviderValidatorTest {
 	@Test
 	public void validate_shouldFailIfPatientIsNotSet() throws Exception {
 		providerValidator.validate(provider, errors);
-
+		
 		Assert.assertTrue(errors.hasErrors());
 		Assert.assertTrue(errors.hasFieldErrors("person"));
-		Assert.assertEquals("Provider.error.person.required", errors
-				.getFieldError("person").getCode());
-
+		Assert.assertEquals("Provider.error.person.required", errors.getFieldError("person").getCode());
+		
 		errors = new BindException(provider, "provider");
-
+		
 		provider.setPerson(new Person(1));
 		providerValidator.validate(provider, errors);
-
+		
 		Assert.assertFalse(errors.hasErrors());
 	}
-
+	
 	/**
 	 * @see ProviderValidator#validate(Object,Errors)
 	 * @verifies fail if provider is retired and the retired reason is not
 	 *           mentioned
 	 */
 	@Test
-	public void validate_shouldFailIfProviderIsRetiredAndTheRetiredReasonIsNotMentioned()
-			throws Exception {
+	public void validate_shouldFailIfProviderIsRetiredAndTheRetiredReasonIsNotMentioned() throws Exception {
 		provider.setRetired(true);
 		provider.setPerson(new Person());
-
+		
 		providerValidator.validate(provider, errors);
-
+		
 		Assert.assertTrue(errors.hasErrors());
 		Assert.assertTrue(errors.hasFieldErrors("retireReason"));
-		Assert.assertEquals("Provider.error.retireReason.required", errors
-				.getFieldError("retireReason").getCode());
-
+		Assert.assertEquals("Provider.error.retireReason.required", errors.getFieldError("retireReason").getCode());
+		
 		errors = new BindException(provider, "provider");
 		provider.setRetireReason("getting old..");
-
+		
 		providerValidator.validate(provider, errors);
-
+		
 		Assert.assertFalse(errors.hasErrors());
 	}
 }

@@ -21,7 +21,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Provider;
 import org.openmrs.ProviderAttributeType;
-import org.openmrs.api.APIException;
 import org.openmrs.api.ProviderService;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.db.ProviderDAO;
@@ -115,17 +114,10 @@ public class ProviderServiceImpl extends BaseOpenmrsService implements ProviderS
 	 */
 	@Override
 	public Integer getCountOfProviders(String query) {
-		if (StringUtils.isBlank(query) || query.length() < getMinSearchCharacters())
+		if (StringUtils.isBlank(query) || query.length() < getMinSearchCharacters()) {
 			return 0;
-		
-		// if there is a number in the query string
-		if (query.matches(".*\\d+.*")) {
-			log.debug("[Identifier search] Query: " + query);
-			return dao.getCountOfProviders(null, query);
-		} else {
-			// there is no number in the string, search on name
-			return dao.getCountOfProviders(query, null);
 		}
+		return dao.getCountOfProviders(query);
 	}
 	
 	/**
@@ -134,18 +126,10 @@ public class ProviderServiceImpl extends BaseOpenmrsService implements ProviderS
 	 */
 	@Override
 	public List<Provider> getProviders(String query, Integer start, Integer length) {
-		if (StringUtils.isBlank(query) || query.length() < getMinSearchCharacters())
+		if (StringUtils.isBlank(query) || query.length() < getMinSearchCharacters()) {
 			return Collections.emptyList();
-		
-		// if there is a number in the query string
-		if (query.matches(".*\\d+.*")) {
-			log.debug("[Identifier search] Query: " + query);
-			return dao.getProviders(null, query, start, length);
-		} else {
-			// there is no number in the string, search on name
-			return dao.getProviders(query, null, start, length);
 		}
-		
+		return dao.getProviders(query, start, length);
 	}
 	
 	/**

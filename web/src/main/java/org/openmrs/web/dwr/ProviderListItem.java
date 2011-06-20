@@ -26,88 +26,35 @@ import org.openmrs.Provider;
  */
 public class ProviderListItem {
 	
-	private String providerName;
-	
 	private String identifier;
 	
-	private String givenName;
-	
-	private String middleName;
-	
-	private String familyName;
-	
-	private String familyName2;
-	
-	private Integer providerId;
+	private String displayName;
 	
 	public ProviderListItem(Provider provider) {
 		Person person = provider.getPerson();
-		
 		if (person != null) {
-			this.givenName = person.getPersonName().getGivenName();
-			this.middleName = person.getPersonName().getMiddleName();
-			this.familyName = person.getPersonName().getFamilyName();
-			this.familyName2 = person.getPersonName().getFamilyName2();
+			displayName = person.getPersonName().toString();
+		} else {
+			displayName = provider.getName();
 		}
-		this.providerId = provider.getId();
-		this.providerName = provider.getName();
-		this.identifier = provider.getIdentifier();
-		
+		identifier = provider.getIdentifier();
 	}
 	
-	public String getFamilyName2() {
-		return familyName2;
-	}
-	
-	public void setFamilyName2(String familyName2) {
-		this.familyName2 = familyName2;
-	}
-	
-	public String getProviderName() {
-		return providerName;
-	}
-	
-	public void setProviderName(String providerName) {
-		this.providerName = providerName;
-	}
-	
+	/**
+	 * @return the identifier of the provider
+	 * @should return the identifier that is mentioned for the provider when a person is not
+	 *         specified
+	 */
 	public String getIdentifier() {
 		return identifier;
 	}
 	
-	public void setIdentifier(String identifier) {
-		this.identifier = identifier;
-	}
-	
-	public String getGivenName() {
-		return givenName;
-	}
-	
-	public void setGivenName(String givenName) {
-		this.givenName = givenName;
-	}
-	
-	public String getMiddleName() {
-		return middleName;
-	}
-	
-	public void setMiddleName(String middleName) {
-		this.middleName = middleName;
-	}
-	
-	public String getFamilyName() {
-		return familyName;
-	}
-	
-	public void setFamilyName(String familyName) {
-		this.familyName = familyName;
-	}
-	
-	public Integer getProviderId() {
-		return providerId;
-	}
-	
-	public void setProviderId(Integer providerId) {
-		this.providerId = providerId;
+	/**
+	 * @return the display name for the provider
+	 * @should return a display name based on whether provider has a person associated
+	 * @should return a display name based on provider name when person is not associated
+	 */
+	public String getDisplayName() {
+		return displayName;
 	}
 }
