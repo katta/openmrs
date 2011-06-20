@@ -17,21 +17,23 @@
 	}
 </style>
 <script type="text/javascript">
-	function retireClicked(input) {
-		var reason = document.getElementById("retireReason");
-		var retiredBy = document.getElementById("retiredBy");
-		if (input) {
-		if (input.checked) {
-			reason.style.display = "";
-			if (retiredBy)
-				retiredBy.style.display = "";
-		}
-		else {
-			reason.style.display = "none";
-			if (retiredBy)
-				retiredBy.style.display = "none";
-		}
-		}
+
+	$j(document).ready(function(){
+		
+ 		var toggleRetired = function(){
+			var reason = $j("#retiredReason");
+			if ($j('#retire').is(':checked')) {
+				reason.show();
+			}
+			else {
+				reason.hide();
+			}	
+		};
+		
+		$j('#retire').click(toggleRetired);
+		toggleRetired();
+	});
+
 </script>
 
 <h2><spring:message code="Provider.manage.title"/></h2>
@@ -77,50 +79,79 @@
 				</spring:bind>
 			</td>
 		</tr>
-		<c:if test="${provider.providerId != null}">
-			<tr>
-				<th><spring:message code="general.createdBy" /></th>
-				<td>
-					<a href="#View User" onclick="return gotoUser(null, '${provider.creator.userId}')">${provider.creator.personName}</a> -
-					<openmrs:formatDate date="${provider.dateCreated}" type="medium" />
-				</td>
-			</tr>
-			<tr>
-				<th><spring:message code="general.retired" /></th>
-				<td>
-					<spring:bind path="provider.retired">
-						<input type="hidden" name="_${status.expression}" />
-						<input type="checkbox" name="${status.expression}" id="voided" onClick="retireClicked(this)" <c:if test="${provider.retired}">checked</c:if> />					
-						<c:if test="${status.errorMessage != ''}"><span class="error">${status.errorMessage}</span></c:if>
-					</spring:bind>
-				</td>
-			</tr>
-			<tr id="retiredReason">
-				<th><spring:message code="general.retiredReason" /></th>
-				<td>
-					<spring:bind path="provider.retireReason">
-						<input type="text" value="${status.value}" name="${status.expression}" size="40" />
-						<c:if test="${status.errorMessage != ''}"><span class="error">${status.errorMessage}</span></c:if>
-					</spring:bind>
-				</td>
-			</tr>
-			<c:if test="${provider.retiredBy != null}">
-				<tr id="retiredBy">
-					<th><spring:message code="general.retiredBy" /></th>
-					<td>
-						<a href="#View User" onclick="return gotoUser(null, '${provider.retiredBy.userId}')">${provider.retiredBy.personName}</a> -
-						<openmrs:formatDate date="${provider.dateRetired}" type="medium" />
-					</td>
-				</tr>
-			</c:if>
-		</c:if>
+	
 	</table>
 	
 	<input type="hidden" name="phrase" value='<request:parameter name="phrase" />'/>
-	<input type="submit" id="saveProviderButton" value='<spring:message code="Provider.save"/>'>
+	<input type="submit" name="saveProviderButton" value='<spring:message code="Provider.save"/>'>
 	&nbsp;
-	<input type="button" value='<spring:message code="general.cancel"/>' onclick="history.go(-1); return; document.location='index.htm?autoJump=false&phrase=<request:parameter name="phrase"/>'">
+	<input type="button" value='<spring:message code="general.cancel"/>' onclick="document.location='index.htm'">
+	
 	</form>
-</div>
+	</div>
+	
+	<br/>
+    <br/>
+
+	<c:if test="${provider.providerId != null}">
+		<div class="box">
+			<form method="post">
+				<table cellpadding="3" cellspacing="0">
+					<tr>
+						<th><spring:message code="general.createdBy" /></th>
+						<td>
+							<a href="#View User" onclick="return gotoUser(null, '${provider.creator.userId}')">${provider.creator.personName}</a> -
+							<openmrs:formatDate date="${provider.dateCreated}" type="medium" />
+						</td>
+					</tr>
+					<c:if test="${provider.retiredBy == null}">
+						<tr>
+							<th><spring:message code="general.retire" /></th>
+							<td>
+								<spring:bind path="provider.retired">
+									<input type="hidden" name="_${status.expression}" />
+									<input type="checkbox" name="${status.expression}" id="retire" <c:if test="${provider.retired}">checked</c:if> />					
+									<c:if test="${status.errorMessage != ''}"><span class="error">${status.errorMessage}</span></c:if>
+								</spring:bind>
+							</td>
+						</tr>
+						<tr id="retiredReason">
+							<th><spring:message code="general.retiredReason" /></th>
+							<td>
+								<spring:bind path="provider.retireReason">
+									<input type="text" id="retire" value="${status.value}" name="${status.expression}" size="40" />
+									<c:if test="${status.errorMessage != ''}"><span class="error">${status.errorMessage}</span></c:if>
+								</spring:bind>
+							</td>
+						</tr>
+						<tr>
+							<td><input type="submit" name="retireProviderButton"
+								value='<spring:message code="Provider.retire"/>'></td>
+						</tr>
+					</c:if>	
+														
+					<c:if test="${provider.retiredBy != null}">
+						<tr id="retiredBy">
+							<th><spring:message code="general.retiredBy" /></th>
+							<td>
+								<a href="#View User" onclick="return gotoUser(null, '${provider.retiredBy.userId}')">${provider.retiredBy.personName}</a> -
+								<openmrs:formatDate date="${provider.dateRetired}" type="medium" />
+							</td>
+						</tr>
+						<tr>
+							<th><spring:message code="general.retiredReason" /></th>
+							<td>${provider.retireReason}</td>
+						</tr>
+						<tr>
+							<td><input type="submit" name="unretireProviderButton"
+								value='<spring:message code="Provider.unretire"/>'></td>
+						</tr>
+					</c:if>		
+				
+				</table>
+				
+		</form>
+	</div>
+</c:if>
 
 <%@ include file="/WEB-INF/template/footer.jsp" %>

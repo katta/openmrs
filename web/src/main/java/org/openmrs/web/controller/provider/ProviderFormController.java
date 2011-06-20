@@ -7,28 +7,12 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openmrs.Encounter;
-import org.openmrs.EncounterType;
-import org.openmrs.Form;
-import org.openmrs.Location;
-import org.openmrs.Person;
 import org.openmrs.Provider;
-import org.openmrs.Visit;
-import org.openmrs.api.EncounterService;
 import org.openmrs.api.ProviderService;
 import org.openmrs.api.context.Context;
-import org.openmrs.propertyeditor.EncounterTypeEditor;
-import org.openmrs.propertyeditor.FormEditor;
-import org.openmrs.propertyeditor.LocationEditor;
 import org.openmrs.propertyeditor.PersonEditor;
-import org.openmrs.propertyeditor.VisitEditor;
-import org.openmrs.util.PrivilegeConstants;
 import org.openmrs.web.WebConstants;
-import org.springframework.beans.propertyeditors.CustomDateEditor;
-import org.springframework.beans.propertyeditors.CustomNumberEditor;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.BindException;
-import org.springframework.validation.ValidationUtils;
 import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.SimpleFormController;
@@ -64,7 +48,7 @@ public class ProviderFormController extends SimpleFormController {
 	 */
 	@Override
 	protected ModelAndView onSubmit(HttpServletRequest request, HttpServletResponse response, Object obj,
-	        BindException errors) throws Exception {
+	                                BindException errors) throws Exception {
 		
 		String view = getFormView();
 		HttpSession httpSession = request.getSession();
@@ -72,10 +56,23 @@ public class ProviderFormController extends SimpleFormController {
 			
 			if (Context.isAuthenticated()) {
 				Provider provider = (Provider) obj;
-				Context.getProviderService().saveProvider(provider);
+				ProviderService service = Context.getProviderService();
+				
+				String message = "Provider.saved";
+				if (request.getParameter("saveProviderButton") != null) {
+					service.saveProvider(provider);
+				} else if (request.getParameter("retireProviderButton") != null) {
+					service.retireProvider(provider, provider.getRetireReason());
+					message = "Provider.retired";
+				} else if (request.getParameter("unretireProviderButton") != null) {
+					service.unretireProvider(provider);
+					message = "Provider.unretired";
+				}
+				
+				// post action
 				view = getSuccessView();
 				view = view + "?providerId=" + provider.getProviderId();
-				httpSession.setAttribute(WebConstants.OPENMRS_MSG_ATTR, "Provider.saved");
+				httpSession.setAttribute(WebConstants.OPENMRS_MSG_ATTR, message);
 				
 			}
 		}

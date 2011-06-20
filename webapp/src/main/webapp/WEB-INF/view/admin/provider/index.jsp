@@ -20,7 +20,7 @@
 					{fieldName:"identifier", header:omsgs.providerIdentifier}
 				],
                 {
-                    searchLabel: '<spring:message code="Provider.search" javaScriptEscape="true"/>',
+                    searchLabel: '<spring:message code="Provider.search" javaScriptEscape="true"/> ',
                     searchPlaceholder:'<spring:message code="Provider.search.placeholder" javaScriptEscape="true"/>'
                 });
 	});
