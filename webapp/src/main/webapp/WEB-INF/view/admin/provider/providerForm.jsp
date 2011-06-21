@@ -18,7 +18,7 @@
 </style>
 <script type="text/javascript">
 
-	$j(document).ready(function(){
+/* 	$j(document).ready(function(){
 		
  		var toggleRetired = function(){
 			var reason = $j("#retiredReason");
@@ -32,7 +32,7 @@
 		
 		$j('#retire').click(toggleRetired);
 		toggleRetired();
-	});
+	}); */
 
 </script>
 
@@ -46,41 +46,54 @@
 <b class="boxHeader"><spring:message code="Provider.create"/></b>
 <div class="box">
 	<form method="post">
-	<table cellpadding="3" cellspacing="0">
-		<tr>
-			<th><spring:message code="Provider.person"/></th>
-			<td>
-				<spring:bind path="provider.person">
-				<openmrs:fieldGen type="org.openmrs.Person" formFieldName="${status.expression}" val="${status.editor.value}"/>
-					<c:if test="${status.errorMessage != ''}"><span class="error">${status.errorMessage}</span></c:if>
-				
-				</spring:bind>
-			</td>
-		</tr>
-		<tr>
-			<th><spring:message code="Provider.name"/></th>
-			<td>
-				<spring:bind path="provider.name">			
-					<input type="text" name="${status.expression}" size="25" 
-						   value="${status.value}" />
-				   
-					<c:if test="${status.errorMessage != ''}"><span class="error">${status.errorMessage}</span></c:if> 
-				</spring:bind>
-			</td>
-		</tr>
-		<tr>
-			<th><spring:message code="Provider.identifier"/></th>
-			<td>
-				<spring:bind path="provider.identifier">			
-					<input type="text" name="${status.expression}" size="10" 
-						   value="${status.value}" />
-				   
-					<c:if test="${status.errorMessage != ''}"><span class="error">${status.errorMessage}</span></c:if> 
-				</spring:bind>
-			</td>
-		</tr>
-	
-	</table>
+		
+		<div class="box" >
+		
+		<table cellpadding="3" cellspacing="0">
+		
+			<tr>
+				<th><spring:message code="Provider.person"/></th>
+				<td>
+					<spring:bind path="provider.person">
+					<openmrs:fieldGen type="org.openmrs.Person" formFieldName="${status.expression}" val="${status.editor.value}"/>
+						<c:if test="${status.errorMessage != ''}"><span class="error">${status.errorMessage}</span></c:if>
+					</spring:bind>
+				</td>
+			</tr>
+		 </table>		
+		</div>
+		<br/>&nbsp;&nbsp;&nbsp;<spring:message code="general.or"></spring:message>
+		<br/>
+		<br/>
+		<div class="box">		
+		<table cellpadding="3" cellspacing="0">
+		
+			<tr>
+				<th><spring:message code="Provider.name"/></th>
+				<td>
+					<spring:bind path="provider.name">			
+						<input type="text" name="${status.expression}" size="25" 
+							   value="${status.value}" />
+					   
+						<c:if test="${status.errorMessage != ''}"><span class="error">${status.errorMessage}</span></c:if> 
+					</spring:bind>
+				</td>
+			</tr>
+			<tr>
+				<th><spring:message code="Provider.identifier"/></th>
+				<td>
+					<spring:bind path="provider.identifier">			
+						<input type="text" name="${status.expression}" size="10" 
+							   value="${status.value}" />
+					   
+						<c:if test="${status.errorMessage != ''}"><span class="error">${status.errorMessage}</span></c:if> 
+					</spring:bind>
+				</td>
+			</tr>
+		
+		</table>
+		</div>
+		<br/>
 	
 	<input type="hidden" name="phrase" value='<request:parameter name="phrase" />'/>
 	<input type="submit" name="saveProviderButton" value='<spring:message code="Provider.save"/>'>
@@ -105,19 +118,13 @@
 						</td>
 					</tr>
 					<c:if test="${provider.retiredBy == null}">
-						<tr>
-							<th><spring:message code="general.retire" /></th>
-							<td>
-								<spring:bind path="provider.retired">
-									<input type="hidden" name="_${status.expression}" />
-									<input type="checkbox" name="${status.expression}" id="retire" <c:if test="${provider.retired}">checked</c:if> />					
-									<c:if test="${status.errorMessage != ''}"><span class="error">${status.errorMessage}</span></c:if>
-								</spring:bind>
-							</td>
-						</tr>
 						<tr id="retiredReason">
 							<th><spring:message code="general.retiredReason" /></th>
 							<td>
+								<spring:bind path="provider.retired">
+									<input type="hidden" name="${status.expression}" value="true"/>
+								</spring:bind>
+
 								<spring:bind path="provider.retireReason">
 									<input type="text" id="retire" value="${status.value}" name="${status.expression}" size="40" />
 									<c:if test="${status.errorMessage != ''}"><span class="error">${status.errorMessage}</span></c:if>
@@ -148,8 +155,8 @@
 						</tr>
 					</c:if>		
 				</table>
-		</form>
-	</div>
-</c:if>
+			</form>
+		</div>
+	</c:if>
 
 <%@ include file="/WEB-INF/template/footer.jsp" %>

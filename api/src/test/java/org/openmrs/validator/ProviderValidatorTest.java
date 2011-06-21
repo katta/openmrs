@@ -39,31 +39,10 @@ public class ProviderValidatorTest {
 	
 	/**
 	 * @see ProviderValidator#validate(Object,Errors)
-	 * @verifies fail if patient is not set
+	 * @verifies be invalid if provider is retired and the retired reason is not mentioned
 	 */
 	@Test
-	public void validate_shouldFailIfPatientIsNotSet() throws Exception {
-		providerValidator.validate(provider, errors);
-		
-		Assert.assertTrue(errors.hasErrors());
-		Assert.assertTrue(errors.hasFieldErrors("person"));
-		Assert.assertEquals("Provider.error.person.required", errors.getFieldError("person").getCode());
-		
-		errors = new BindException(provider, "provider");
-		
-		provider.setPerson(new Person(1));
-		providerValidator.validate(provider, errors);
-		
-		Assert.assertFalse(errors.hasErrors());
-	}
-	
-	/**
-	 * @see ProviderValidator#validate(Object,Errors)
-	 * @verifies fail if provider is retired and the retired reason is not
-	 *           mentioned
-	 */
-	@Test
-	public void validate_shouldFailIfProviderIsRetiredAndTheRetiredReasonIsNotMentioned() throws Exception {
+	public void validate_shouldBeInvalidIfProviderIsRetiredAndTheRetiredReasonIsNotMentioned() throws Exception {
 		provider.setRetired(true);
 		provider.setPerson(new Person());
 		
@@ -80,4 +59,89 @@ public class ProviderValidatorTest {
 		
 		Assert.assertFalse(errors.hasErrors());
 	}
+	
+	/**
+	 * @see ProviderValidator#validate(Object,Errors)
+	 * @verifies be invalid if person is not set
+	 */
+	@Test
+	public void validate_shouldBeInvalidIfPersonIsNotSet() throws Exception {
+		providerValidator.validate(provider, errors);
+		
+		Assert.assertTrue(errors.hasErrors());
+		Assert.assertTrue(errors.hasFieldErrors("person"));
+		Assert.assertEquals("Provider.error.person.required", errors.getFieldError("person").getCode());
+		
+		errors = new BindException(provider, "provider");
+		
+		provider.setPerson(new Person(1));
+		providerValidator.validate(provider, errors);
+		
+		Assert.assertFalse(errors.hasErrors());
+	}
+	
+	/**
+	 * @see ProviderValidator#validate(Object,Errors)
+	 * @verifies be invalid if provider details are not set
+	 */
+	@Test
+	public void validate_shouldBeInvalidIfProviderDetailsAreNotSet() throws Exception {
+		providerValidator.validate(provider, errors);
+		
+		Assert.assertTrue(errors.hasErrors());
+		Assert.assertTrue(errors.hasFieldErrors("person"));
+		Assert.assertEquals("Provider.error.person.required", errors.getFieldError("person").getCode());
+		
+		errors = new BindException(provider, "provider");
+		
+		provider.setName("Provider");
+		providerValidator.validate(provider, errors);
+		
+		Assert.assertTrue(errors.hasErrors());
+		Assert.assertEquals("Provider.error.name.identifier.required", errors.getFieldError("name").getCode());
+		
+		providerValidator.validate(provider, errors);
+		
+		errors = new BindException(provider, "provider");
+		provider.setIdentifier("identifier");
+		provider.setName(null);
+		providerValidator.validate(provider, errors);
+		
+		Assert.assertTrue(errors.hasErrors());
+		Assert.assertEquals("Provider.error.name.identifier.required", errors.getFieldError("name").getCode());
+		
+
+		errors = new BindException(provider, "provider");
+		provider.setIdentifier("identifier");
+		provider.setName("name");
+		providerValidator.validate(provider, errors);
+
+		Assert.assertFalse(errors.hasErrors());
+
+	}
+	
+	/**
+	 * @see ProviderValidator#validate(Object,Errors)
+	 * @verifies be invalid if both provider details and person are set
+	 */
+	@Test
+	public void validate_shouldBeInvalidIfBothProviderDetailsAndPersonAreSet() throws Exception {
+		provider.setPerson(new Person(1));
+		provider.setName("provider name");
+		
+		providerValidator.validate(provider, errors);
+		
+		Assert.assertTrue(errors.hasErrors());
+		Assert.assertEquals("Provider.error.person.required", errors.getFieldError("person").getCode());
+		
+		errors = new BindException(provider, "provider");
+		
+		provider.setName(null);
+		provider.setIdentifier("identifier");
+		providerValidator.validate(provider, errors);
+		
+		Assert.assertTrue(errors.hasErrors());
+		Assert.assertEquals("Provider.error.person.required", errors.getFieldError("person").getCode());
+	}
+	
 }

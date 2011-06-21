@@ -36,8 +36,7 @@ public class ProviderValidator implements Validator {
 	/**
 	 * Returns whether or not this validator supports validating a given class.
 	 * 
-	 * @param c
-	 *            The class to check for support.
+	 * @param c The class to check for support.
 	 * @see org.springframework.validation.Validator#supports(java.lang.Class)
 	 */
 	@SuppressWarnings("rawtypes")
@@ -48,18 +47,18 @@ public class ProviderValidator implements Validator {
 	}
 	
 	/**
-	 * Validates the given Provider. checks to see if a provider is valid
-	 * (Either of Person or Provider name should be set and not both) Checks to
-	 * see if there is a retired Reason in case a provider is retired
+	 * Validates the given Provider. checks to see if a provider is valid (Either of Person or
+	 * Provider name should be set and not both) Checks to see if there is a retired Reason in case
+	 * a provider is retired
 	 * 
-	 * @param obj
-	 *            The encounter to validate.
-	 * @param errors
-	 *            Errors
+	 * @param obj The encounter to validate.
+	 * @param errors Errors
 	 * @see org.springframework.validation.Validator#validate(java.lang.Object,
 	 *      org.springframework.validation.Errors)
-	 * @should fail if provider is retired and the retired reason is not mentioned
-	 * @should fail if patient is not set
+	 * @should be invalid if provider is retired and the retired reason is not mentioned
+	 * @should be invalid if person is not set
+	 * @should be invalid if provider details are not set
+	 * @should be invalid if both provider details and person are set
 	 */
 	public void validate(Object obj, Errors errors) throws APIException {
 		if (log.isDebugEnabled())
@@ -70,12 +69,25 @@ public class ProviderValidator implements Validator {
 		
 		Provider provider = (Provider) obj;
 		if (provider != null) {
-			if (!(StringUtils.isEmpty(provider.getName()) ? provider.getPerson() != null : provider.getPerson() == null)) {
+			
+			if ((provider.getPerson() != null && hasProviderDetails(provider))
+			        || (provider.getPerson() == null && !hasProviderDetails(provider))) {
 				errors.rejectValue("person", "Provider.error.person.required");
+			} else if ((hasProviderDetails(provider) && !hasBothNameAndIdentifier(provider))) {
+				errors.rejectValue("name", "Provider.error.name.identifier.required");
 			}
+			
 			if (provider.isRetired() && StringUtils.isEmpty(provider.getRetireReason())) {
 				errors.rejectValue("retireReason", "Provider.error.retireReason.required");
 			}
 		}
+	}
+	
+	private boolean hasBothNameAndIdentifier(Provider provider) {
+		return StringUtils.isNotEmpty(provider.getName()) && StringUtils.isNotEmpty(provider.getIdentifier());
+	}
+	
+	private boolean hasProviderDetails(Provider provider) {
+		return StringUtils.isNotEmpty(provider.getName()) || StringUtils.isNotEmpty(provider.getIdentifier());
 	}
 }

@@ -437,4 +437,8 @@ public class PrivilegeConstants {
 	
 	@AddOnStartup(description = "Able to delete provider")
 	public static final String PURGE_PROVIDER = "Purge Providers";
+	
+	@AddOnStartup(description = "Able to add/edit/retire provider attribute types")
+	public static final String MANAGE_PROVIDER_ATTRIBUTE_TYPES = "Manage Provider Attribute Types";
+
 }
