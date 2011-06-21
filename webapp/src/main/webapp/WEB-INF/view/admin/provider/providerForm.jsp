@@ -43,7 +43,15 @@
 	<br />
 </spring:hasBindErrors>
 
-<b class="boxHeader"><spring:message code="Provider.create"/></b>
+<b class="boxHeader">
+<c:if test="${provider.providerId == null}">
+	<spring:message code="Provider.create"/>
+</c:if>
+<c:if test="${provider.providerId != null}">
+	<spring:message code="Provider.edit"/>
+</c:if>
+</b>
+
 <div class="box">
 	<form method="post">
 		
